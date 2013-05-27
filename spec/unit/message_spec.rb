@@ -1,15 +1,6 @@
 require 'spec_helper'
 require 'hushed/message'
 
-
-class DocumentDouble
-  attr_accessor :type, :name, :message_id, :warehouse, :date
-end
-
-class ClientDouble
-  attr_accessor :client_id, :business_unit
-end
-
 module Hushed
   describe "Message" do
     before do

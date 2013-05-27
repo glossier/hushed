@@ -1,5 +1,3 @@
-require 'nokogiri'
-
 module Hushed
   class Message
 
