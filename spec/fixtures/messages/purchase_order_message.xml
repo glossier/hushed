@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EventMessage
+  xmlns="http://schemas.quietlogistics.com/V2/EventMessage.xsd"
+  ClientId="HUSHED"
+  BusinessUnit="HUSHED"
+  DocumentName="HUSHED_PurchaseOrder_1234_20100927_132505124.xml"
+  DocumentType="PurchaseOrder"
+  MessageId="EF1CE966-38A2-428b-BA67-EFF23AF22F57"
+  Warehouse="CORP1"
+  MessageDate="2009-09-01T12:00:00Z">
+</EventMessage>

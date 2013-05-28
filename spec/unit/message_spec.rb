@@ -3,6 +3,7 @@ require 'hushed/message'
 
 module Hushed
   describe "Message" do
+    include Fixtures
     before do
       prepare_models
     end
@@ -13,16 +14,25 @@ module Hushed
       assert_equal @client, message.client
     end
 
-    it "should raise an error if the document is missing" do
+    it "should raise an error if the document is missing when trying to generate XML" do
+      message = Message.new(:client => @client)
       assert_raises Message::MissingDocumentError do
-        Message.new(:client => @client)
+        message.to_xml
       end
     end
 
-    it "should raise an error if the client is missing" do
+    it "should raise an error if the client is missing when trying to generate XML" do
+      message = Message.new(:document => @document)
       assert_raises Message::MissingClientError do
-        Message.new(:document => @document)
+        message.to_xml
       end
+    end
+
+    it "should be possible to create a Message with XML and query it for information" do
+      message = Message.new(:xml => load_message('purchase_order_message'))
+
+      assert_equal 'PurchaseOrder', message.document_type
+      assert_equal 'HUSHED_PurchaseOrder_1234_20100927_132505124.xml', message.document_name
     end
 
     it "should be able to generate an XML document" do

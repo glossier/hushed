@@ -9,8 +9,9 @@ module Hushed
     attr_reader :client, :document
 
     def initialize(options = {})
-      @client = options[:client] || raise(MissingClientError.new("client cannot be missing"))
-      @document = options[:document] || raise(MissingDocumentError.new("document cannot be missing"))
+      @xml = Nokogiri::XML::Document.parse(options[:xml]) if options[:xml]
+      @client = options[:client]
+      @document = options[:document]
     end
 
     def to_xml
@@ -20,7 +21,17 @@ module Hushed
       builder.to_xml
     end
 
+    def document_type
+      @document_type ||= @xml.css('EventMessage').first['DocumentType']
+    end
+
+    def document_name
+      @document_name ||= @xml.css('EventMessage').first['DocumentName']
+    end
+
     def attributes
+      raise(MissingClientError.new("client cannot be missing")) unless @client
+      raise(MissingDocumentError.new("document cannot be missing")) unless @document
       {
         ClientId: @client.client_id, BusinessUnit: @client.business_unit,
         DocumentName: @document.name, DocumentType: @document.type,

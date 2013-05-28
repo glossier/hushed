@@ -1,5 +1,6 @@
 require 'minitest/autorun'
 require 'nokogiri'
+require 'mocha/setup'
 
 module Fixtures
   def load_fixture(path)
@@ -9,6 +10,11 @@ module Fixtures
   def load_response(response_name)
     load_fixture("spec/fixtures/documents/responses/#{response_name}.xml")
   end
+
+  def load_message(message_name)
+    load_fixture("spec/fixtures/messages/#{message_name}.xml")
+  end
+
 end
 
 class LineItemDouble
