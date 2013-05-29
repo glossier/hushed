@@ -22,6 +22,14 @@ module Hushed
     end
 
     def remove(message)
+      bucket = client.from_quiet_bucket
+      object = bucket.objects[message.document_name]
+      if object.exists?
+        object.delete
+        true
+      else
+        false
+      end
     end
 
     def build_document(type, contents)

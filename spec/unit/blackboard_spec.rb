@@ -65,7 +65,6 @@ module Hushed
       assert_equal nil, @blackboard.build_document('ThingerRequest', 'thinger')
     end
 
-
     it "should be possible to fetch a document from the blackboard" do
       @io.write('fancy noodles')
       @io.rewind
@@ -73,6 +72,24 @@ module Hushed
       Response.expects(:valid_type?).returns(true)
       @message.stubs(:document_type).returns('ThingerResponse')
       assert_equal 'fancy noodles', @blackboard.fetch(@message).contents
+    end
+
+    it "should be possible to remove a document from the blackboard" do
+      s3object = mock()
+      s3object.expects(:delete)
+      s3object.expects(:exists?).returns(true)
+
+      @bucket.expects(:objects).returns({@message.document_name => s3object})
+      assert_equal true, @blackboard.remove(@message)
+    end
+
+    it "should not raise an exception if the document for removal couldn't be found" do
+      s3object = mock()
+      s3object.expects(:delete).never
+      s3object.expects(:exists?).returns(false)
+
+      @bucket.expects(:objects).returns({@message.document_name => s3object})
+      assert_equal false, @blackboard.remove(@message)
     end
 
     def assert_io(expectation, io)
