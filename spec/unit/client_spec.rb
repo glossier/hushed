@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'hushed/client'
 require 'active_support/core_ext/hash/except'
+require 'active_support/core_ext/hash/keys'
 
 module Hushed
   describe "Client" do
@@ -26,6 +27,12 @@ module Hushed
 
     after do
       AWS.config(:stub_requests => false)
+    end
+
+    it "should be able to handle configuration that is passed in with keys as strings" do
+      client = Client.new(@options.stringify_keys)
+      assert_equal 'HUSHED', client.client_id
+      assert_equal 'HUSHED', client.business_unit
     end
 
     it "should not be possible to initialize a client without credentials" do

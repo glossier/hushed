@@ -2,13 +2,15 @@ require 'spec_helper'
 require 'hushed/documents/request/shipment_order'
 
 module Hushed
-  module Document
+  module Documents
     module Request
       describe "ShipmentOrder" do
+        include Hushed::Documents::DocumentInterfaceTestcases
 
         before do
           @order = OrderDouble.example
           @client = ClientDouble.new(:client_id => 'HUSHED', :business_unit => 'HUSHED')
+          @object = @shipment_order = ShipmentOrder.new(:order => @order, :client => @client)
         end
 
         it "should be possible to initialize a ShipmentOrder" do

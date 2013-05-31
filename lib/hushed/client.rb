@@ -1,6 +1,7 @@
 require 'aws/s3'
 require 'aws/sqs'
 require 'active_support/core_ext/hash/slice'
+require 'active_support/core_ext/hash/indifferent_access'
 
 module Hushed
   class Client
@@ -12,6 +13,7 @@ module Hushed
     attr_reader :client_id, :business_unit
 
     def initialize(options = {})
+      options = options.with_indifferent_access
       @buckets       = options[:buckets]
       @queues        = options[:queues]
       @client_id     = options[:client_id]
@@ -70,15 +72,19 @@ module Hushed
     end
 
     def all_credentials?
-      @credentials && @credentials.keys.sort == [:access_key_id, :secret_access_key]
+      has_keys?(@credentials, [:access_key_id, :secret_access_key])
     end
 
     def all_buckets?
-      @buckets && @buckets.keys.sort == [:from, :to]
+      has_keys?(@buckets, [:from, :to])
     end
 
     def all_queues?
-      @queues && @queues.keys.sort == [:from, :inventory, :to]
+      has_keys?(@queues, [:from, :to, :inventory])
+    end
+
+    def has_keys?(hash, keys)
+      keys.reduce(hash) {|result, key| result && hash[key]}
     end
   end
 end

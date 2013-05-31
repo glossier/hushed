@@ -1,6 +1,8 @@
 require 'minitest/autorun'
 require 'nokogiri'
+require 'yaml'
 require 'mocha/setup'
+require 'hushed'
 
 module Fixtures
   def load_fixture(path)
@@ -14,7 +16,14 @@ module Fixtures
   def load_message(message_name)
     load_fixture("spec/fixtures/messages/#{message_name}.xml")
   end
+end
 
+module Configuration
+  def load_configuration
+    test_credentials_file = ENV['HOME'] + '/.hushed/credentials.yml'
+    test_credentials_file = "spec/fixtures/credentials.yml" unless File.exists?(test_credentials_file)
+    YAML.load(test_credentials_file)
+  end
 end
 
 class LineItemDouble

@@ -1,9 +1,11 @@
 module Hushed
-  module Document
+  module Documents
     module Request
       class ShipmentOrder
 
         NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd"
+
+        DATEFORMAT = "%Y%m%d_%H%M%S"
 
         class MissingOrderError < StandardError; end
         class MissingClientError < StandardError; end
@@ -35,8 +37,28 @@ module Hushed
           builder.to_xml
         end
 
+        def type
+          'ShipmentOrder'
+        end
+
+        def document_number
+          @order.id
+        end
+
+        def order_type
+          'SO'
+        end
+
+        def date
+          @order.created_at.utc
+        end
+
+        def filename
+          "#{@client.business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
+        end
+
         def order_header_attributes
-          {OrderNumber: @order.id, OrderType: @order.type, OrderDate: @order.created_at.utc, ShipDate: @order.created_at.utc}
+          {OrderNumber: document_number, OrderType: order_type, OrderDate: date, ShipDate: date}
         end
 
         def shipping_attributes(shipping_line)
