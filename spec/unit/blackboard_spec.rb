@@ -2,20 +2,22 @@ require 'spec_helper'
 require 'hushed/blackboard'
 
 module Hushed
-  module Response
-    class ThingerResponse
-      attr_reader :contents
-      def initialize(contents)
-        @contents = contents
+  module Documents
+    module Response
+      class ThingerResponse
+        attr_reader :contents
+        def initialize(contents)
+          @contents = contents
+        end
       end
     end
-  end
 
-  module Request
-    class ThingerRequest
-      attr_reader :contents
-      def initialize(contents)
-        @contents = contents
+    module Request
+      class ThingerRequest
+        attr_reader :contents
+        def initialize(contents)
+          @contents = contents
+        end
       end
     end
   end
@@ -52,13 +54,13 @@ module Hushed
     it "should be possible to build a document for a response type" do
       Response.expects(:valid_type?).returns(true)
       response = @blackboard.build_document('ThingerResponse', 'thinger')
-      assert_equal 'thinger', response.contents
+      assert_equal 'thinger', response.contents[:io]
     end
 
     it "should be possible to build a document for a request type" do
       Request.expects(:valid_type?).returns(true)
       response = @blackboard.build_document('ThingerRequest', 'thinger')
-      assert_equal 'thinger', response.contents
+      assert_equal 'thinger', response.contents[:io]
     end
 
     it "should return nil if the type was not valid" do
@@ -71,7 +73,7 @@ module Hushed
       @bucket.expects(:objects).returns({@message.document_name => @io})
       Response.expects(:valid_type?).returns(true)
       @message.stubs(:document_type).returns('ThingerResponse')
-      assert_equal 'fancy noodles', @blackboard.fetch(@message).contents
+      assert_equal 'fancy noodles', @blackboard.fetch(@message).contents[:io]
     end
 
     it "should be possible to remove a document from the blackboard" do

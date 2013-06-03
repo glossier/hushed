@@ -34,11 +34,11 @@ module Hushed
 
     def build_document(type, contents)
       namespace = if Response.valid_type?(type)
-        Response
+        Documents::Response
       elsif Request.valid_type?(type)
-        Request
+        Documents::Request
       end
-      namespace.const_get(type).new(contents) if namespace
+      namespace.const_get(type).new(:io => contents) if namespace
     end
   end
 end

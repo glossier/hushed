@@ -3,9 +3,11 @@ module Hushed
   module Documents
     module Response
       class ShipmentOrderResult
+        attr_reader :io
 
-        def initialize(io)
-          @document = Nokogiri::XML::Document.parse(io)
+        def initialize(options = {})
+          @io = options[:io]
+          @document = Nokogiri::XML::Document.parse(@io)
         end
 
         def client_id

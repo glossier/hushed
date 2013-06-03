@@ -130,7 +130,7 @@ end
 class DocumentDouble
   include Hushed::Documents::Document
   attr_accessor :type, :message_id, :warehouse, :date, :client
-  attr_accessor :business_unit, :document_number
+  attr_accessor :business_unit, :document_number, :io
 
   def initialize(options = {})
     options.each do |key, value|
@@ -147,6 +147,15 @@ class DocumentDouble
 
   def filename=(filename)
     @filename = filename
+  end
+end
+
+class MessageDouble
+  attr_accessor :document_name, :document_type
+
+  def initialize(options = {})
+    @document_name = options[:document_name]
+    @document_type = options[:document_type]
   end
 end
 

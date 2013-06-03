@@ -6,7 +6,7 @@ module Hushed
     class MissingDocumentError < StandardError; end
     class MissingClientError < StandardError; end
 
-    attr_reader :client, :document
+    attr_reader :client, :document, :xml
 
     def initialize(options = {})
       @xml = Nokogiri::XML::Document.parse(options[:xml]) if options[:xml]

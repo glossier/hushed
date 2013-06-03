@@ -9,7 +9,7 @@ module Hushed
 
         it "should be able to successfully parse a response document" do
           document = load_response('shipment_order_result')
-          order_result = ShipmentOrderResult.new(document)
+          order_result = ShipmentOrderResult.new(io: document)
 
           assert_equal 'HUSHED', order_result.client_id
           assert_equal 'HUSHED', order_result.business_unit
