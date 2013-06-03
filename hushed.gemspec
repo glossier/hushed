@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["chris.saunders@shopify.com"]
   spec.description   = "API Client for Quiet Logistics Services"
   spec.summary       = "Integrates with QL Blackboard and work Queue"
-  spec.homepage      = ""
+  spec.homepage      = "http://github.com/csaunders/hushed"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
