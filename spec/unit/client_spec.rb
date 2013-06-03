@@ -12,6 +12,7 @@ module Hushed
         secret_access_key: 'alakazam',
         client_id: 'HUSHED',
         business_unit: 'HUSHED',
+        warehouse: 'SPACE',
         buckets: {
           to: 'hushed-to-quiet',
           from: 'hushed-from-quiet'

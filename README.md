@@ -1,6 +1,6 @@
 # Hushed
 
-TODO: Write a gem description
+Client library for integrating with the Quiet Logistics API
 
 ## Installation
 
@@ -18,7 +18,42 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Basic usage for Hushed goes as follows:
+
+
+```ruby
+require 'hushed'
+require 'hushed/documents/request/shipment_order'
+
+credentials = {
+  access_key_id: 'AWS_ACCESS_KEY', secret_access_key: 'SECRET_ACCESS_KEY',
+  client_id: 'QUIET CLIENT ID', business_unit: 'QUIET BUSINESS UNIT',
+  warehouse: 'QUIET WAREHOUSE',
+  buckets: {
+    to: 'hushed-to-quiet',
+    from: 'hushed-from-quiet'
+  },
+  queues: {
+    to: http://queue.amazonaws/1234567890/hushed_to_quiet
+    from: http://queue.amazonaws/1234567890/hushed_from_quiet
+    inventory: http://queue.amazonaws/1234567890/hushed_inventory
+  }
+}
+client = Hushed::Client.new(credentials)
+order = Order.new # Orders are expected to have similar attributes as ShopifyAPI::Order
+document = Hushed::Documents::Request::ShipmentOrder.new(client: client, order: order)
+
+blackboard = Hushed::Blackboard.new(client)
+queue = Hushed::Queue.new(client)
+
+message = blackboard.post(document)
+queue.send(message)
+
+response_message = queue.receive
+response_document = blackboard.fetch(message)
+process_document(response_document)
+blackboard.remove(message)
+```
 
 ## Contributing
 

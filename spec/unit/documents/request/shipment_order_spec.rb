@@ -9,7 +9,7 @@ module Hushed
 
         before do
           @order = OrderDouble.example
-          @client = ClientDouble.new(:client_id => 'HUSHED', :business_unit => 'HUSHED')
+          @client = ClientDouble.new(:client_id => 'HUSHED', :business_unit => 'HUSHED', :warehouse => 'SPACE')
           @object = @shipment_order = ShipmentOrder.new(:order => @order, :client => @client)
         end
 

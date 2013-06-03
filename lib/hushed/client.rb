@@ -10,13 +10,14 @@ module Hushed
     class InvalidBucketError < StandardError; end
     class InvalidQueueError < StandardError; end
 
-    attr_reader :client_id, :business_unit
+    attr_reader :client_id, :business_unit, :warehouse
 
     def initialize(options = {})
       options        = options.with_indifferent_access
       @buckets       = options[:buckets]
       @queues        = options[:queues]
       @client_id     = options[:client_id]
+      @warehouse     = options[:warehouse]
       @business_unit = options[:business_unit]
       @credentials   = options.slice(:access_key_id, :secret_access_key)
       verify!
@@ -69,6 +70,7 @@ module Hushed
       raise(InitializationError.new("To, From and Inventory queues need to be set")) unless all_queues?
       raise(InitializationError.new("client_id needs to be set")) unless @client_id
       raise(InitializationError.new("business_unit needs to be set")) unless @business_unit
+      raise(InitializationError.new("warehouse needs to be set")) unless @warehouse
     end
 
     def all_credentials?
