@@ -13,7 +13,7 @@ module Hushed
     attr_reader :client_id, :business_unit
 
     def initialize(options = {})
-      options = options.with_indifferent_access
+      options        = options.with_indifferent_access
       @buckets       = options[:buckets]
       @queues        = options[:queues]
       @client_id     = options[:client_id]

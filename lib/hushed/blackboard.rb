@@ -11,7 +11,7 @@ module Hushed
     def post(document)
       bucket = client.to_quiet_bucket
       if bucket.objects[document.filename].write(document.to_xml)
-        Message.new(:client => @client, :document => @document)
+        Message.new(:client => @client, :document => document)
       end
     end
 

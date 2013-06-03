@@ -2,6 +2,8 @@ module Hushed
   module Documents
     module Request
       class ShipmentOrder
+        include Hushed::Documents::Document
+        extend Forwardable
 
         NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd"
 
@@ -12,6 +14,8 @@ module Hushed
 
         attr_reader :order, :client
 
+        def_delegators :@client, :warehouse, :business_unit, :client_id
+
         def initialize(options = {})
           @order = options[:order] || raise(MissingOrderError.new("order cannot be missing"))
           @client = options[:client] || raise(MissingClientError.new("client cannot be missing"))
@@ -20,8 +24,8 @@ module Hushed
         def to_xml
           builder = Nokogiri::XML::Builder.new do |xml|
             xml.ShipOrderDocument(xmlns: NAMESPACE) do
-              xml.ClientID @client.client_id
-              xml.BusinessUnit @client.business_unit
+              xml.ClientID client_id
+              xml.BusinessUnit business_unit
               xml.OrderHeader(order_header_attributes) do
                 xml.Comments @order.note
                 xml.ShipMode(shipping_attributes(@order.shipping_lines.first))
@@ -54,7 +58,7 @@ module Hushed
         end
 
         def filename
-          "#{@client.business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
+          "#{business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
         end
 
         def order_header_attributes

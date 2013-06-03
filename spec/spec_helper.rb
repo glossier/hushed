@@ -22,7 +22,7 @@ module Configuration
   def load_configuration
     test_credentials_file = ENV['HOME'] + '/.hushed/credentials.yml'
     test_credentials_file = "spec/fixtures/credentials.yml" unless File.exists?(test_credentials_file)
-    YAML.load(test_credentials_file)
+    YAML.load(File.open(test_credentials_file, 'rb'))
   end
 end
 
@@ -128,7 +128,26 @@ class OrderDouble
 end
 
 class DocumentDouble
-  attr_accessor :type, :name, :message_id, :warehouse, :date
+  include Hushed::Documents::Document
+  attr_accessor :type, :message_id, :warehouse, :date, :client
+  attr_accessor :business_unit, :document_number
+
+  def initialize(options = {})
+    options.each do |key, value|
+      self.public_send("#{key}=".to_sym, value)
+    end
+  end
+
+  def to_xml
+    builder = Nokogiri::XML::Builder.new do |xml|
+      xml.DocumentDouble 'Hello World'
+    end
+    builder.to_xml
+  end
+
+  def filename=(filename)
+    @filename = filename
+  end
 end
 
 class ClientDouble

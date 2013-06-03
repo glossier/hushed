@@ -44,7 +44,7 @@ module Hushed
 
       assert node = document.css('EventMessage').first
       assert_equal @document.type, node['DocumentType']
-      assert_equal @document.name, node['DocumentName']
+      assert_equal @document.filename, node['DocumentName']
       assert_equal @document.warehouse, node['Warehouse']
       assert_equal @document.date.utc.to_s, node['MessageDate']
       assert_equal @document.message_id, node['MessageId']
@@ -54,16 +54,18 @@ module Hushed
     end
 
     def prepare_models
-      @document = DocumentDouble.new
-      @document.type = "PurchaseOrder"
-      @document.name = "abracadabra.xml"
-      @document.message_id = "alakazam"
-      @document.warehouse = "Onett1"
-      @document.date = Time.new(2013, 4, 1, 12, 30, 0)
+      @document = DocumentDouble.new(
+        type: "PurchaseOrder",
+        filename: "abracadabra.xml",
+        message_id: "alakazam",
+        warehouse: "Onett1",
+        date: Time.new(2013, 4, 1, 12, 30, 0)
+      )
 
-      @client = ClientDouble.new
-      @client.client_id = 'HUSHED'
-      @client.business_unit = 'HUSHED'
+      @client = ClientDouble.new(
+        client_id: 'HUSHED',
+        business_unit: 'HUSHED'
+      )
     end
   end
 end

@@ -22,11 +22,11 @@ module Hushed
     end
 
     def document_type
-      @document_type ||= @xml.css('EventMessage').first['DocumentType']
+      @document ? @document.type : @xml.css('EventMessage').first['DocumentType']
     end
 
     def document_name
-      @document_name ||= @xml.css('EventMessage').first['DocumentName']
+      @document ? @document.filename : @xml.css('EventMessage').first['DocumentName']
     end
 
     def attributes
@@ -34,7 +34,7 @@ module Hushed
       raise(MissingDocumentError.new("document cannot be missing")) unless @document
       {
         ClientId: @client.client_id, BusinessUnit: @client.business_unit,
-        DocumentName: @document.name, DocumentType: @document.type,
+        DocumentName: @document.filename, DocumentType: @document.type,
         Warehouse: @document.warehouse, MessageDate: @document.date.utc,
         MessageId: @document.message_id, xmlns: NAMESPACE
       }
