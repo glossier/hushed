@@ -1,6 +1,6 @@
 # Hushed
 
-Client library for integrating with the Quiet Logistics API
+Client library for integrating with the [Quiet Logistics](http://quietlogistics.com) API 
 
 ## Installation
 
