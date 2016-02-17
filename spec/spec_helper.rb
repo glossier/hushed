@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'yaml'
 require 'mocha/setup'
 require 'hushed'
+require 'pry'
 
 module Fixtures
   def load_fixture(path)

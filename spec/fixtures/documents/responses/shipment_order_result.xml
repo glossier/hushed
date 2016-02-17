@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SOResult 
+<SOResult
   xmlns="http://schemas.quiettechnology.com/V2/SOResultDocument.xsd"
   ClientID="HUSHED"
   BusinessUnit="HUSHED"
   CartonCount="1"
-  DateShipped="2009-09-01T00:00:00Z"
+  DateShipped="2009-09-01T04:00:00Z"
   FreightCost="10.00"
   OrderNumber="1234567890">
   <Line Line="1" Quantity="1" />
   <Line Line="2" Quantity="1" />
-  <Carton 
+  <Carton
     Carrier="USPS"
     CartonId="S12345678901"
     CartonNumber="1"
