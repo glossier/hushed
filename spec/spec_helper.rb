@@ -92,6 +92,11 @@ class ShippingLineDouble
   end
 end
 
+
+class ShipmentDouble
+  
+end
+
 class OrderDouble
   DEFAULT_OPTIONS = {
     :line_items => [LineItemDouble.example],

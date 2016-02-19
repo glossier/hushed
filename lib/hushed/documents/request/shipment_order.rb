@@ -17,8 +17,8 @@ module Hushed
         def_delegators :@client, :warehouse, :business_unit, :client_id
 
         def initialize(options = {})
-          @client   = options[:client] || raise(MissingClientError.new("client cannot be missing"))
-          @shipment = options[:shipment]
+          @client   = options.fetch(:client)
+          @shipment = options.fetch(:shipment)
           @shipment_number = @shipment.number
         end
 
