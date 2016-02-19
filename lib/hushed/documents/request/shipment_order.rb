@@ -26,8 +26,8 @@ module Hushed
           builder = Nokogiri::XML::Builder.new do |xml|
             xml.ShipOrderDocument('xmlns' => 'http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd') {
 
-              xml.ClientID @client.client_id
-              xml.BusinessUnit @client.business_unit
+              xml.ClientID client_id
+              xml.BusinessUnit business_unit
 
               xml.OrderHeader('OrderNumber' => @shipment_number,
                               'OrderType'   => order_type,
