@@ -14,11 +14,6 @@ module Hushed
           @object = @shipment_order = ShipmentOrder.new(shipment: @shipment, client: @client)
         end
 
-        it "should be possible to initialize a ShipmentOrder" do
-          shipment_order = ShipmentOrder.new(shipment: @shipment, client: @client)
-          assert_equal @shipment, shipment_order.shipment
-        end
-
         it "should raise an error if an shipment wasn't passed in" do
           assert_raises KeyError do
             ShipmentOrder.new(client: @client)
