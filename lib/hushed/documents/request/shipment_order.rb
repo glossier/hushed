@@ -59,16 +59,12 @@ module Hushed
         end
 
         def shipping_method
-          value = @shipment.shipping_method.try(:code)
-          value = @shipment.shipping_method.try(:code) if value.blank?
-          value
+          @shipment.shipping_method.code
         end
 
         # NOTE: We may want to introduce a new field here
         def service_level
-          value = @shipment.shipping_method.try(:admin_name)
-          value = @shipment.shipping_method.try(:admin_name) if value.blank?
-          value
+          @shipment.shipping_method.admin_name          
         end
 
         def order_type

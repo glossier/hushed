@@ -29,18 +29,18 @@ end
 
 class LineItemDouble
   DEFAULT_OPTIONS = {
-    :id => 123456,
-    :quantity => 1,
-    :unit_of_measure => 'EA',
-    :price => '12.95'
+    id: 123456,
+    quantity: 1,
+    price: '12.95',
+    sku: "ABC-123"
   }
 
-  attr_reader :id, :quantity, :unit_of_measure, :price
+  attr_reader :id, :quantity, :price, :sku
   def initialize(options = {})
     @id = options[:id]
     @quantity = options[:quantity]
-    @unit_of_measure = options[:unit_of_measure]
     @price = options[:price]
+    @sku = options[:sku]
   end
 
   def self.example(options = {})
@@ -48,29 +48,70 @@ class LineItemDouble
   end
 end
 
-class AddressDouble
+class StateDouble
   DEFAULT_OPTIONS = {
-    :company => 'Shopify',
-    :name => 'John Smith',
-    :address1 => '123 Fake St',
-    :address2 => 'Unit 128',
-    :city => 'Ottawa',
-    :province_code => 'ON',
-    :country_code => 'CA',
-    :zip => 'K1N 5T5'
+    iso_name: "CANADA",
+    name: "Ontario",
+    abbr: "ON",
   }
 
-  attr_reader :company, :name, :address1, :address2, :city, :province_code
-  attr_reader :country_code, :zip
+  attr_reader :name
+
+  def initialize(options = {})
+    @name = options[:name]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+end
+
+class CountryDouble
+  DEFAULT_OPTIONS = {
+    iso_name: "CANADA",
+    name: "Canada",
+    iso: "CA"
+  }
+
+  attr_reader :name
+
+  def initialize(options = {})
+    @name = options[:name]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+
+end
+
+class AddressDouble
+  DEFAULT_OPTIONS = {
+    company: 'Shopify',
+    name: 'John Smith',
+    address1: '123 Fake St',
+    address2: 'Unit 128',
+    city: 'Ottawa',
+    country: CountryDouble.example,
+    state: StateDouble.example,
+    zipcode: 'K1N 5T5'
+  }
+
+  attr_reader :company, :name, :address1, :address2, :city, :country, :state, :zipcode
+
   def initialize(options = {})
     @company = options[:company]
     @name = options[:name]
     @address1 = options[:address1]
     @address2 = options[:address2]
     @city = options[:city]
-    @province_code = options[:province_code]
-    @country_code = options[:country_code]
-    @zip = options[:zip]
+    @country = options[:country]
+    @state = options[:state]
+    @zipcode = options[:zipcode]
+  end
+
+  def full_name
+    name
   end
 
   def self.example(options = {})
@@ -92,44 +133,99 @@ class ShippingLineDouble
   end
 end
 
+class ShippingMethodDouble
+  DEFAULT_OPTIONS = {
+    name: "UPS Ground",
+    admin_name: "GROUND",
+    code: "FEDEX"
+  }
 
-class ShipmentDouble
-  
+  attr_reader :name, :admin_name, :code
+
+  def initialize(options = {})
+    @name = options[:name]
+    @admin_name = options[:admin_name]
+    @code = options[:code]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
 end
 
 class OrderDouble
   DEFAULT_OPTIONS = {
-    :line_items => [LineItemDouble.example],
-    :shipping_address => AddressDouble.example,
-    :billing_address => AddressDouble.example,
-    :note => 'Happy Birthday',
-    :created_at => Time.new(2013, 04, 05, 12, 30, 00),
-    :id => 123456,
-    :shipping_lines => [ShippingLineDouble.new(code: "FEDEX_GROUND", price: "34.40", source: "fedex", title: "FedEx Ground")],
-    :email => 'john@smith.com',
-    :total_price => '123.45'
+    number: "GLO#{rand.to_s[2..11]}",
+    line_items: [LineItemDouble.example],
+    ship_address: AddressDouble.example,
+    bill_address: AddressDouble.example,
+    note: 'Happy Birthday',
+    created_at: Time.new(2013, 04, 05, 12, 30, 00),
+    id: 123456,
+    email: 'john@smith.com',
+    total_price: '123.45'
   }
 
-  attr_reader :line_items, :shipping_address, :billing_address, :note, :email
+  attr_reader :line_items, :ship_address, :bill_address, :note, :email
   attr_reader :total_price, :email, :id, :type, :created_at, :shipping_lines
+  attr_reader :number
+
   def initialize(options = {})
     @line_items = options[:line_items]
-    @shipping_address = options[:shipping_address]
-    @billing_address = options[:billing_address]
+    @ship_address = options[:ship_address]
+    @bill_address = options[:bill_address]
     @note = options[:note]
     @created_at = options[:created_at]
     @id = options[:id]
     @shipping_lines = options[:shipping_lines]
     @email = options[:email]
     @total_price = options[:total_price]
+    @number = options[:number]
   end
 
   def self.example(options = {})
     self.new(DEFAULT_OPTIONS.merge(options))
   end
 
+  def special_instructions
+    @note
+  end
+
+  def shipping_address
+    @ship_address
+  end
+
+  def billing_address
+    @bill_address
+  end
+
   def type
     @type || "SO"
+  end
+end
+
+class ShipmentDouble
+  DEFAULT_OPTIONS = {
+    shipping_method: ShippingMethodDouble.example,
+    number: "H#{rand.to_s[2..11]}",
+    order: OrderDouble.example,
+    address: AddressDouble.example,
+    state: "pending",
+    created_at: Time.new(2013, 04, 06, 13, 45, 00)
+  }
+
+  attr_reader :order, :number, :address, :shipping_method, :created_at
+
+  def initialize(options = {})
+    @order = options[:order]
+    @number = options[:number]
+    @address = options[:address]
+    @shipping_method = options[:shipping_method]
+    @created_at = options[:created_at]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
