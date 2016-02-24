@@ -49,7 +49,7 @@ module Hushed
     end
 
     def s3_client
-      @sqs_client ||= AWS::S3.new(@credentials)
+      @s3_client ||= AWS::S3.new(@credentials)
     end
 
     def fetch_bucket(name)

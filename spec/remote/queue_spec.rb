@@ -44,7 +44,7 @@ module Hushed
     it "should be able to fetch a message from the queue" do
       @client.from_quiet_queue.send_message(@message.to_xml)
       message = @queue.receive
-      # assert_equal @message.to_xml, message.xml.to_xml
+
       assert_equal @message.document_type, message.document_type
       assert_equal @message.document_name, message.document_name
     end

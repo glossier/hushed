@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module Hushed
   module Documents
     module Request
@@ -64,7 +66,7 @@ module Hushed
 
         # NOTE: We may want to introduce a new field here
         def service_level
-          @shipment.shipping_method.admin_name          
+          @shipment.shipping_method.admin_name
         end
 
         def order_type
@@ -142,6 +144,10 @@ module Hushed
 
         def filename
           "#{business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
+        end
+
+        def message_id
+          SecureRandom.uuid
         end
 
         # def initialize(options = {})
