@@ -39,8 +39,8 @@ module Hushed
 
                 xml.Comments @shipment.order.special_instructions
 
-                xml.ShipMode('Carrier'      => shipping_method,
-                             'ServiceLevel' => service_level)
+                xml.ShipMode('Carrier'      => @shipment.shipping_method.carrier,
+                             'ServiceLevel' => @shipment.shipping_method.service_level)
 
                 xml.ShipTo(ship_to_hash)
                 xml.BillTo(bill_to_hash)
@@ -58,15 +58,6 @@ module Hushed
 
         def order_items
           @shipment.order.line_items
-        end
-
-        def shipping_method
-          @shipment.shipping_method.code
-        end
-
-        # NOTE: We may want to introduce a new field here
-        def service_level
-          @shipment.shipping_method.admin_name
         end
 
         def order_type

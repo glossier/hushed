@@ -136,16 +136,20 @@ end
 class ShippingMethodDouble
   DEFAULT_OPTIONS = {
     name: "UPS Ground",
-    admin_name: "GROUND",
-    code: "FEDEX"
+    admin_name: "fed001",
+    code: "fedex",
+    carrier: "FEDEX",
+    service_level: "GROUND"
   }
 
-  attr_reader :name, :admin_name, :code
+  attr_reader :name, :admin_name, :code, :carrier, :service_level
 
   def initialize(options = {})
     @name = options[:name]
     @admin_name = options[:admin_name]
     @code = options[:code]
+    @carrier = options[:carrier]
+    @service_level = options[:service_level]
   end
 
   def self.example(options = {})
