@@ -33,7 +33,7 @@ module Hushed
 
               xml.OrderHeader('OrderNumber' => @shipment_number,
                               'OrderType'   => order_type,
-                              'OrderDate'   => @shipment.created_at.utc) {
+                              'OrderDate'   => @shipment.created_at.utc.iso8601) {
 
                 xml.Extension @shipment.order.number
 

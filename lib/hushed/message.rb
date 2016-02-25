@@ -35,7 +35,7 @@ module Hushed
       {
         ClientId: @client.client_id, BusinessUnit: @client.business_unit,
         DocumentName: @document.filename, DocumentType: @document.type,
-        Warehouse: @document.warehouse, MessageDate: @document.date.utc,
+        Warehouse: @document.warehouse, MessageDate: @document.date.utc.iso8601,
         MessageId: @document.message_id, xmlns: NAMESPACE
       }
     end

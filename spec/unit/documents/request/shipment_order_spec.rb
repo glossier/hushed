@@ -48,7 +48,7 @@ module Hushed
         private
         def assert_header(header)
           assert_equal "#{@shipment.number}", header['OrderNumber']
-          assert_equal @shipment.created_at.utc.to_s, header['OrderDate']
+          assert_equal @shipment.created_at.utc.iso8601.to_s, header['OrderDate']
           assert_equal @order.type, header['OrderType']
         end
 

@@ -46,7 +46,7 @@ module Hushed
       assert_equal @document.type, node['DocumentType']
       assert_equal @document.filename, node['DocumentName']
       assert_equal @document.warehouse, node['Warehouse']
-      assert_equal @document.date.utc.to_s, node['MessageDate']
+      assert_equal @document.date.utc.iso8601.to_s, node['MessageDate']
       assert_equal @document.message_id, node['MessageId']
 
       assert_equal @client.client_id, node['ClientId']
