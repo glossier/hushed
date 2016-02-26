@@ -64,7 +64,13 @@ module Hushed
         end
 
         def order_items
-          @shipment.order.line_items
+          @shipment.order.line_items.select do |item|
+            if item.product.respond_to?(:restricted?)
+              !item.product.restricted?
+            else
+              true
+            end
+          end
         end
 
         def order_type

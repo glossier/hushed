@@ -27,20 +27,41 @@ module Configuration
   end
 end
 
+class ProductDouble
+  DEFAULT_OPTIONS = {
+    restricted: false
+  }
+
+  attr_reader :restricted
+  def initialize(options = {})
+    @restricted = options[:restricted]
+  end
+
+  def restricted?
+    @restricted
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+end
+
 class LineItemDouble
   DEFAULT_OPTIONS = {
     id: 123456,
     quantity: 1,
     price: '12.95',
-    sku: "ABC-123"
+    sku: "ABC-123",
+    product: ProductDouble.example
   }
 
-  attr_reader :id, :quantity, :price, :sku
+  attr_reader :id, :quantity, :price, :sku, :product
   def initialize(options = {})
     @id = options[:id]
     @quantity = options[:quantity]
     @price = options[:price]
     @sku = options[:sku]
+    @product = options[:product]
   end
 
   def self.example(options = {})
