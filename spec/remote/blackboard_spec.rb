@@ -33,7 +33,7 @@ module Hushed
     end
 
     it "should be able to fetch a document from an S3 bucket when given a message" do
-      expected_contents = load_response('shipment_order_result').read()
+      expected_contents = load_response('shipment_order_result')
       @client.from_quiet_bucket.objects[@document.filename].write(expected_contents)
       message = MessageDouble.new(document_name: @document.filename, document_type: @document.type)
       document = @blackboard.fetch(message)

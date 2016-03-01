@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'hushed/queue'
+require 'hushed/error_message'
 
 module Hushed
   describe "Queue" do
@@ -38,6 +39,14 @@ module Hushed
 
       received_message = @queue.receive
       assert_equal false, received_message.nil?
+    end
+
+    it "should return an error message when receiving an error from a queue" do
+      @message.stubs(:body).returns(load_message('error_message'))
+      @sqs_queue.expects(:receive_message).yields(@message)
+
+      received_message = @queue.receive
+      assert_instance_of Hushed::ErrorMessage, received_message
     end
 
     it "should be possible to get an approximate number of pending messages" do

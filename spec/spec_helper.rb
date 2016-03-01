@@ -7,7 +7,7 @@ require 'pry'
 
 module Fixtures
   def load_fixture(path)
-    File.open(path, 'rb')
+    File.open(path, 'rb').read
   end
 
   def load_response(response_name)

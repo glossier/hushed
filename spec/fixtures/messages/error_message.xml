@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ErrorMessage
+  xmlns="http://schemas.quietlogistics.com/V2/EventMessageErrorResponse.xsd"
+  OriginalMessageId="ab6e7e7a-6d45-4c75-9fec-e08dba4a9c31"
+  ResponseDate="2009-09-01T12:00:00Z"
+  ClientId="HUSHED"
+  BusinessUnit="HUSHED"
+  ResultCode="1030"
+  ResultDescription="Document: Hushed_ShipmentOrder_H123456789_20160229_135723.xml - Error: An error has occured">
+</ErrorMessage>
