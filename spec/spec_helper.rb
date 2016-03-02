@@ -27,25 +27,6 @@ module Configuration
   end
 end
 
-class ProductDouble
-  DEFAULT_OPTIONS = {
-    restricted: false
-  }
-
-  attr_reader :restricted
-  def initialize(options = {})
-    @restricted = options[:restricted]
-  end
-
-  def restricted?
-    @restricted
-  end
-
-  def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
-  end
-end
-
 class LineItemDouble
   DEFAULT_OPTIONS = {
     id: 123456,

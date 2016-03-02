@@ -45,21 +45,6 @@ module Hushed
           assert_line_item(@order.line_items.first, order_details.first)
         end
 
-        it "excludes restricted product from the XML document" do
-          order = OrderDouble.example(line_items: [
-                    LineItemDouble.example,
-                    LineItemDouble.example(product: ProductDouble.example(restricted: true)),
-                    LineItemDouble.example
-                  ])
-          shipment = ShipmentDouble.example(order: order)
-
-          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
-          document = Nokogiri::XML::Document.parse(message.to_xml)
-
-          order_details = document.css('OrderDetails')
-          assert_equal 2, order_details.length
-        end
-
         it "explodes phase 1 items into individual skus" do
           phase_1_set = LineItemDouble.example(sku: "GPS1-5")
           order = OrderDouble.example(line_items: [
