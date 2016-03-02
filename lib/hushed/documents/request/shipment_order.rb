@@ -51,16 +51,25 @@ module Hushed
                                           'ServiceType' => service[:service_type])
                   end
                 end
-
-                # xml.Notes('NoteType' => @shipment['note_type'].to_s, 'NoteValue' => @shipment['note_value'].to_s)
               }
 
               order_items.collect do |item|
-                xml.OrderDetails(line_item_hash(item))
+                if Phase1Set.match(item)
+                  add_individual_phase_1_items(item, xml)
+                else
+                  xml.OrderDetails(line_item_hash(item))
+                end
               end
             }
           end
           builder.to_xml
+        end
+
+        def add_individual_phase_1_items(phase_1_item, xml)
+          phase_1 = Phase1Set.new(phase_1_item).included_items
+          phase_1.collect do |item|
+            xml.OrderDetails(line_item_hash(item))
+          end
         end
 
         def order_items

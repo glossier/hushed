@@ -52,11 +52,30 @@ module Hushed
                     LineItemDouble.example
                   ])
           shipment = ShipmentDouble.example(order: order)
+
           message = ShipmentOrder.new(:shipment => shipment, :client => @client)
           document = Nokogiri::XML::Document.parse(message.to_xml)
 
           order_details = document.css('OrderDetails')
           assert_equal 2, order_details.length
+        end
+
+        it "explodes phase 1 items into individual skus" do
+          phase_1_set = LineItemDouble.example(sku: "GPS1-5")
+          order = OrderDouble.example(line_items: [
+                    phase_1_set,
+                    LineItemDouble.example
+                  ])
+          shipment = ShipmentDouble.example(order: order)
+          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+
+          order_details = document.css('OrderDetails')
+          assert_equal 5, order_details.count
+          assert_equal "GMJC100", order_details[0]['ItemNumber']
+          assert_equal "GPM100", order_details[1]['ItemNumber']
+          assert_equal "GBD100-3", order_details[2]['ItemNumber']
+          assert_equal "GPST100-2", order_details[3]['ItemNumber']
         end
 
         private
@@ -90,6 +109,7 @@ module Hushed
           assert_equal address.zipcode, node['PostalCode']
           assert_equal address.country.name, node['Country']
         end
+
       end
     end
   end
