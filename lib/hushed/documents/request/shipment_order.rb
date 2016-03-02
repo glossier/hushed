@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'hushed/phase_1_set'
 
 module Hushed
   module Documents

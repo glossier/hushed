@@ -33,7 +33,6 @@ class LineItemDouble
     quantity: 1,
     price: '12.95',
     sku: "ABC-123",
-    product: ProductDouble.example
   }
 
   attr_reader :id, :quantity, :price, :sku, :product
