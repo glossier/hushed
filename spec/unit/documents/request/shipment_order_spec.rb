@@ -60,7 +60,7 @@ module Hushed
           assert_equal "GMJC100", order_details[0]['ItemNumber']
           assert_equal "GPM100", order_details[1]['ItemNumber']
           assert_equal "GBD100-3", order_details[2]['ItemNumber']
-          assert_equal "GPST100-2", order_details[3]['ItemNumber']
+          assert_equal "GPST100 - 2", order_details[3]['ItemNumber']
         end
 
         private

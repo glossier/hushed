@@ -2,8 +2,8 @@ module Hushed
   class Phase1Set
 
     SKUS = {
-      "GPS1-5" => "GPST100-2",
-      "GPS2-5" => "GPST200-2",
+      "GPS1-5" => "GPST100 - 2",
+      "GPS2-5" => "GPST200 - 2",
       "GPS3-5" => "GPST300",
       "GPS4-5" => "GPST400",
       "GPS5-5" => "GPST500"

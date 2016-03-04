@@ -20,13 +20,13 @@ module Hushed
     it "returns the skin tint for Phase 1 Set -	Shade: Light" do
       phase1Set = Phase1Set.new(line_item("GPS1-5"))
 
-      assert_equal "GPST100-2", phase1Set.skin_tint.sku
+      assert_equal "GPST100 - 2", phase1Set.skin_tint.sku
     end
 
     it "returns the skin tint for Phase 1 Set -	Shade: Medium" do
       phase1Set = Phase1Set.new(line_item("GPS2-5"))
 
-      assert_equal "GPST200-2", phase1Set.skin_tint.sku
+      assert_equal "GPST200 - 2", phase1Set.skin_tint.sku
     end
 
     it "returns the skin tint for Phase 1 Set -	Shade: Dark" do
