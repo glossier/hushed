@@ -52,15 +52,38 @@ module Hushed
                     LineItemDouble.example
                   ])
           shipment = ShipmentDouble.example(order: order)
-          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
-          document = Nokogiri::XML::Document.parse(message.to_xml)
 
+          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+
+          document = Nokogiri::XML::Document.parse(message.to_xml)
           order_details = document.css('OrderDetails')
           assert_equal 5, order_details.count
           assert_equal "GMJC100", order_details[0]['ItemNumber']
           assert_equal "GPM100", order_details[1]['ItemNumber']
           assert_equal "GBD100-3", order_details[2]['ItemNumber']
           assert_equal "GPST100 - 2", order_details[3]['ItemNumber']
+        end
+
+        it "explodes the line items into parts when applicable" do
+          line_item_with_parts = LineItemDouble.example(parts: [
+            VariantDouble.example(sku: "GBB100"),
+            VariantDouble.example(sku: "GSC"),
+            VariantDouble.example(sku: "GGG")
+          ])
+          order = OrderDouble.example(line_items: [
+            line_item_with_parts,
+            LineItemDouble.example
+          ])
+          shipment = ShipmentDouble.example(order: order)
+
+          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+          order_details = document.css('OrderDetails')
+          assert_equal 4, order_details.count
+          assert_equal "GBB100", order_details[0]['ItemNumber']
+          assert_equal "GSC", order_details[1]['ItemNumber']
+          assert_equal "GGG", order_details[2]['ItemNumber']
         end
 
         private

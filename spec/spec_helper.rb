@@ -27,21 +27,42 @@ module Configuration
   end
 end
 
+class VariantDouble
+  DEFAULT_OPTIONS = {
+    id: 112233,
+    sku: "ABC-123",
+    price: '6.95'
+  }
+
+  attr_reader :id, :sku, :price
+  def initialize(options = {})
+    @id = options[:id]
+    @sku = options[:sku]
+    @price = options[:price]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+end
+
 class LineItemDouble
   DEFAULT_OPTIONS = {
     id: 123456,
     quantity: 1,
     price: '12.95',
     sku: "ABC-123",
+    parts: []
   }
 
-  attr_reader :id, :quantity, :price, :sku, :product
+  attr_reader :id, :quantity, :price, :sku, :product, :parts
   def initialize(options = {})
     @id = options[:id]
     @quantity = options[:quantity]
     @price = options[:price]
     @sku = options[:sku]
     @product = options[:product]
+    @parts = options[:parts]
   end
 
   def self.example(options = {})

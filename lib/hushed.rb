@@ -1,5 +1,6 @@
 require "nokogiri"
 require "hushed/documents/document"
+require "hushed/documents/request/hash"
 require "hushed/version"
 require "hushed/client"
 require "hushed/blackboard"

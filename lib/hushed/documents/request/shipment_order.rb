@@ -6,6 +6,7 @@ module Hushed
     module Request
       class ShipmentOrder
         include Hushed::Documents::Document
+        include Hushed::Documents::Request::Hash
         extend Forwardable
 
         NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd"
@@ -47,16 +48,18 @@ module Hushed
                 xml.BillTo(bill_to_hash)
 
                 if @shipment.respond_to?(:value_added_services)
-                  @shipment.value_added_services.collect do |service|
+                  @shipment.value_added_services.each do |service|
                     xml.ValueAddedService('Service'     => service[:service],
                                           'ServiceType' => service[:service_type])
                   end
                 end
               }
 
-              order_items.collect do |item|
+              order_items.each do |item|
                 if Phase1Set.match(item)
                   add_individual_phase_1_items(item, xml)
+                elsif contain_parts? item
+                  add_item_parts(item, xml)
                 else
                   xml.OrderDetails(line_item_hash(item))
                 end
@@ -66,9 +69,19 @@ module Hushed
           builder.to_xml
         end
 
+        def contain_parts?(item)
+          item.parts && !item.parts.empty?
+        end
+
+        def add_item_parts(item, xml)
+          item.parts.each do |part|
+            xml.OrderDetails(line_item_hash(item, part))
+          end
+        end
+
         def add_individual_phase_1_items(phase_1_item, xml)
           phase_1 = Phase1Set.new(phase_1_item).included_items
-          phase_1.collect do |item|
+          phase_1.each do |item|
             xml.OrderDetails(line_item_hash(item))
           end
         end
@@ -79,43 +92,6 @@ module Hushed
 
         def order_type
           'SO'
-        end
-
-        def line_item_hash(item)
-          {
-            'ItemNumber'      => item.sku,
-            'Line'            => item.id,
-            'QuantityOrdered' => item.quantity,
-            'QuantityToShip'  => item.quantity,
-            'UOM'             => 'EA',
-            'Price'           => item.price
-          }
-        end
-
-        def ship_to_hash
-          {
-            'Company'    => ship_address.company,
-            'Contact'    => full_name,
-            'Address1'   => ship_address.address1,
-            'Address2'   => ship_address.address2,
-            'City'       => ship_address.city,
-            'State'      => ship_address.state.name,
-            'PostalCode' => ship_address.zipcode,
-            'Country'    => ship_address.country.name
-          }
-        end
-
-        def bill_to_hash
-          {
-            'Company'    => bill_address.company,
-            'Contact'    => full_name,
-            'Address1'   => bill_address.address1,
-            'Address2'   => bill_address.address2,
-            'City'       => bill_address.city,
-            'State'      => bill_address.state.name,
-            'PostalCode' => bill_address.zipcode,
-            'Country'    => bill_address.country.name
-          }
         end
 
         def ship_address
