@@ -1,7 +1,7 @@
 module Hushed
   module Documents
     module Request
-      module Hash
+      module HashConverter
         def line_item_hash(item, part = nil)
           {
             'ItemNumber'      => part ? part.sku : item.sku,

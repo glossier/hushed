@@ -1,11 +1,12 @@
 require 'spec_helper'
 require 'hushed/documents/request/shipment_order'
+require 'hushed/documents/request/hash_converter'
 
 module Hushed
   module Documents
     module Request
       describe "ShipmentOrder" do
-        include Hushed::Documents::Request::Hash
+        include Hushed::Documents::Request::HashConverter
 
         it "uses the value from the parts if specified" do
           item = LineItemDouble.example(quantity: 3)

@@ -1,4 +1,5 @@
 require 'forwardable'
+require "hushed/documents/request/hash_converter"
 require 'hushed/phase_1_set'
 
 module Hushed
@@ -6,7 +7,7 @@ module Hushed
     module Request
       class ShipmentOrder
         include Hushed::Documents::Document
-        include Hushed::Documents::Request::Hash
+        include Hushed::Documents::Request::HashConverter
         extend Forwardable
 
         NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd"
