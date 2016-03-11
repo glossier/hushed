@@ -65,10 +65,10 @@ module Hushed
         end
 
         it "explodes the line items into parts when applicable" do
-          line_item_with_parts = LineItemDouble.example(parts: [
-            VariantDouble.example(sku: "GBB100"),
-            VariantDouble.example(sku: "GSC"),
-            VariantDouble.example(sku: "GGG")
+          line_item_with_parts = LineItemDouble.example(part_line_items: [
+              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GBB200")),
+              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GSC300")),
+              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GML100"))
           ])
           order = OrderDouble.example(line_items: [
             line_item_with_parts,
@@ -81,9 +81,9 @@ module Hushed
           document = Nokogiri::XML::Document.parse(message.to_xml)
           order_details = document.css('OrderDetails')
           assert_equal 4, order_details.count
-          assert_equal "GBB100", order_details[0]['ItemNumber']
-          assert_equal "GSC", order_details[1]['ItemNumber']
-          assert_equal "GGG", order_details[2]['ItemNumber']
+          assert_equal "GBB200", order_details[0]['ItemNumber']
+          assert_equal "GSC300", order_details[1]['ItemNumber']
+          assert_equal "GML100", order_details[2]['ItemNumber']
         end
 
         private

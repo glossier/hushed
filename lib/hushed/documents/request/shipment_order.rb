@@ -60,7 +60,7 @@ module Hushed
                 if Phase1Set.match(item)
                   add_individual_phase_1_items(item, xml)
                 elsif contain_parts? item
-                  add_item_parts(item, xml)
+                  add_item_parts(item.part_line_items, xml)
                 else
                   xml.OrderDetails(line_item_hash(item))
                 end
@@ -71,12 +71,12 @@ module Hushed
         end
 
         def contain_parts?(item)
-          item.parts && !item.parts.empty?
+          item.part_line_items && !item.part_line_items.empty?
         end
 
-        def add_item_parts(item, xml)
-          item.parts.each do |part|
-            xml.OrderDetails(line_item_hash(item, part))
+        def add_item_parts(part_line_items, xml)
+          part_line_items.each do |part|
+            xml.OrderDetails(part_line_item_hash(part))
           end
         end
 

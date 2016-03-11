@@ -52,17 +52,36 @@ class LineItemDouble
     quantity: 1,
     price: '12.95',
     sku: "ABC-123",
-    parts: []
+    part_line_items: []
   }
 
-  attr_reader :id, :quantity, :price, :sku, :product, :parts
+  attr_reader :id, :quantity, :price, :sku, :product, :part_line_items
   def initialize(options = {})
     @id = options[:id]
     @quantity = options[:quantity]
     @price = options[:price]
     @sku = options[:sku]
     @product = options[:product]
-    @parts = options[:parts]
+    @part_line_items = options[:part_line_items]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+end
+
+class PartLineItemDouble
+  DEFAULT_OPTIONS = {
+    id: 444555,
+    variant: VariantDouble.example,
+    line_item: LineItemDouble.example
+  }
+
+  attr_reader :id, :variant, :line_item
+  def initialize(options = {})
+    @id = options[:id]
+    @variant = options[:variant]
+    @line_item = options[:line_item]
   end
 
   def self.example(options = {})

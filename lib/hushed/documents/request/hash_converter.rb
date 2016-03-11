@@ -2,14 +2,25 @@ module Hushed
   module Documents
     module Request
       module HashConverter
-        def line_item_hash(item, part = nil)
+        def part_line_item_hash(part)
           {
-            'ItemNumber'      => part ? part.sku : item.sku,
-            'Line'            => part ? part.id : item.id,
+            'ItemNumber'      => part.variant.sku,
+            'Line'            => part.variant.id,
+            'QuantityOrdered' => part.line_item.quantity,
+            'QuantityToShip'  => part.line_item.quantity,
+            'UOM'             => 'EA',
+            'Price'           => part.variant.price
+          }
+        end
+
+        def line_item_hash(item)
+          {
+            'ItemNumber'      => item.sku,
+            'Line'            => item.id,
             'QuantityOrdered' => item.quantity,
             'QuantityToShip'  => item.quantity,
             'UOM'             => 'EA',
-            'Price'           => part ? part.price : item.price
+            'Price'           => item.price
           }
         end
 

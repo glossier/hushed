@@ -9,17 +9,19 @@ module Hushed
         include Hushed::Documents::Request::HashConverter
 
         it "uses the value from the parts if specified" do
-          item = LineItemDouble.example(quantity: 3)
-          part = VariantDouble.example
+          part = PartLineItemDouble.example(
+            variant: VariantDouble.example(id: 1214, sku: "SKU42", price: 25.95),
+            line_item: LineItemDouble.example(quantity: 3)
+          )
 
-          hash = line_item_hash(item, part)
+          hash = part_line_item_hash(part)
 
-          assert_equal part.sku, hash['ItemNumber']
-          assert_equal part.id, hash['Line']
-          assert_equal item.quantity, hash['QuantityOrdered']
-          assert_equal item.quantity, hash['QuantityToShip']
+          assert_equal "SKU42", hash['ItemNumber']
+          assert_equal 1214, hash['Line']
+          assert_equal 3, hash['QuantityOrdered']
+          assert_equal 3, hash['QuantityToShip']
           assert_equal "EA", hash['UOM']
-          assert_equal part.price, hash['Price']
+          assert_equal 25.95, hash['Price']
         end
 
         it "defaults to the item values when the item does not contain parts" do
