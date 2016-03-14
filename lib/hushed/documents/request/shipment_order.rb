@@ -56,35 +56,50 @@ module Hushed
                 end
               }
 
-              order_items.each do |item|
-                if Phase1Set.match(item)
-                  add_individual_phase_1_items(item, xml)
-                elsif contain_parts? item
-                  add_item_parts(item.part_line_items, xml)
-                else
-                  xml.OrderDetails(line_item_hash(item))
-                end
-              end
+              add_items_to_shipment_order(order_items, xml)
             }
           end
           builder.to_xml
+        end
+
+        def add_items_to_shipment_order(items, xml)
+          item_hashes = convert_to_hashes(items)
+          grouped_items = group_items_by_sku(item_hashes)
+          grouped_items.each { |hash| xml.OrderDetails(hash) }
+        end
+
+        def convert_to_hashes(items)
+          items.map do |item|
+            if Phase1Set.match(item)
+              add_individual_phase_1_items(item)
+            elsif contain_parts? item
+              add_item_parts(item.part_line_items)
+            else
+              line_item_hash(item)
+            end
+          end.flatten
+        end
+
+        def group_items_by_sku(item_hashes)
+          grouped = item_hashes.group_by {|hash| hash['ItemNumber'] }
+          grouped.values.map do |hashes|
+            hash = hashes.first
+            hash['QuantityOrdered'] = hash['QuantityToShip'] = hashes.count
+            hash
+          end
         end
 
         def contain_parts?(item)
           item.part_line_items && !item.part_line_items.empty?
         end
 
-        def add_item_parts(part_line_items, xml)
-          part_line_items.each do |part|
-            xml.OrderDetails(part_line_item_hash(part))
-          end
+        def add_item_parts(part_line_items)
+          part_line_items.map { |part| part_line_item_hash(part) }
         end
 
-        def add_individual_phase_1_items(phase_1_item, xml)
+        def add_individual_phase_1_items(phase_1_item)
           phase_1 = Phase1Set.new(phase_1_item).included_items
-          phase_1.each do |item|
-            xml.OrderDetails(line_item_hash(item))
-          end
+          phase_1.map { |item| line_item_hash(item) }
         end
 
         def order_items

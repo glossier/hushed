@@ -86,7 +86,30 @@ module Hushed
           assert_equal "GML100", order_details[2]['ItemNumber']
         end
 
-        private
+        it "groups duplicate line items together" do
+          phase_2 = LineItemDouble.example(part_line_items: [
+              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GBB200")),
+              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GSC300")),
+              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GML100"))
+          ])
+          order = OrderDouble.example(line_items: [
+            phase_2,
+            LineItemDouble.example(sku: "GBB200")
+          ])
+          shipment = ShipmentDouble.example(order: order)
+
+          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+          order_details = document.css('OrderDetails')
+          assert_equal 3, order_details.count
+          assert_equal "GBB200", order_details[0]['ItemNumber']
+          assert_equal "2", order_details[0]['QuantityOrdered']
+          assert_equal "2", order_details[0]['QuantityToShip']
+        end
+
+      private
+
         def assert_header(header)
           assert_equal "#{@shipment.number}", header['OrderNumber']
           assert_equal @shipment.created_at.utc.iso8601.to_s, header['OrderDate']
