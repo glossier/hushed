@@ -91,10 +91,10 @@ module Hushed
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GBB200")),
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GSC300")),
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GML100"))
-          ])
+          ], quantity: 2)
           order = OrderDouble.example(line_items: [
             phase_2,
-            LineItemDouble.example(sku: "GBB200")
+            LineItemDouble.example(sku: "GBB200", quantity: 3)
           ])
           shipment = ShipmentDouble.example(order: order)
 
@@ -104,8 +104,8 @@ module Hushed
           order_details = document.css('OrderDetails')
           assert_equal 3, order_details.count
           assert_equal "GBB200", order_details[0]['ItemNumber']
-          assert_equal "2", order_details[0]['QuantityOrdered']
-          assert_equal "2", order_details[0]['QuantityToShip']
+          assert_equal "5", order_details[0]['QuantityOrdered']
+          assert_equal "5", order_details[0]['QuantityToShip']
         end
 
       private

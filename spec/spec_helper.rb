@@ -62,7 +62,14 @@ class LineItemDouble
     @price = options[:price]
     @sku = options[:sku]
     @product = options[:product]
-    @part_line_items = options[:part_line_items]
+
+    @part_line_items = options[:part_line_items].map do |part|
+      PartLineItemDouble.example(
+        id: part.id,
+        variant: part.variant,
+        line_item: LineItemDouble.example(quantity: @quantity)
+      )
+    end
   end
 
   def self.example(options = {})

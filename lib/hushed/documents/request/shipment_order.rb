@@ -84,8 +84,7 @@ module Hushed
           grouped = item_hashes.group_by {|hash| hash['ItemNumber'] }
           grouped.values.map do |hashes|
             hash = hashes.first
-            hash['QuantityOrdered'] = hash['QuantityToShip'] = hashes.count
-            hash
+            update_quantity(hash, total_quantity(hashes))
           end
         end
 
@@ -100,6 +99,15 @@ module Hushed
         def add_individual_phase_1_items(phase_1_item)
           phase_1 = Phase1Set.new(phase_1_item).included_items
           phase_1.map { |item| line_item_hash(item) }
+        end
+
+        def update_quantity(hash, quantity)
+          hash['QuantityOrdered'] = hash['QuantityToShip'] = quantity
+          hash
+        end
+
+        def total_quantity(hashes)
+          hashes.map{ |hash| hash['QuantityOrdered'] }.reduce(:+)
         end
 
         def order_items
