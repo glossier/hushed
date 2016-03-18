@@ -5,7 +5,7 @@ module Hushed
         def part_line_item_hash(part)
           {
             'ItemNumber'      => part.variant.sku,
-            'Line'            => part.variant.id,
+            'Line'            => part.variant.sku.hash.abs,
             'QuantityOrdered' => part.line_item.quantity,
             'QuantityToShip'  => part.line_item.quantity,
             'UOM'             => 'EA',
@@ -16,7 +16,7 @@ module Hushed
         def line_item_hash(item)
           {
             'ItemNumber'      => item.sku,
-            'Line'            => item.id,
+            'Line'            => item.sku.hash.abs,
             'QuantityOrdered' => item.quantity,
             'QuantityToShip'  => item.quantity,
             'UOM'             => 'EA',

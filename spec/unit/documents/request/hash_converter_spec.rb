@@ -17,7 +17,7 @@ module Hushed
           hash = part_line_item_hash(part)
 
           assert_equal "SKU42", hash['ItemNumber']
-          assert_equal 1214, hash['Line']
+          assert_equal "SKU42".hash.abs, hash['Line']
           assert_equal 3, hash['QuantityOrdered']
           assert_equal 3, hash['QuantityToShip']
           assert_equal "EA", hash['UOM']
@@ -30,7 +30,7 @@ module Hushed
           hash = line_item_hash(item)
 
           assert_equal item.sku, hash['ItemNumber']
-          assert_equal item.id, hash['Line']
+          assert_equal item.sku.hash.abs, hash['Line']
           assert_equal item.quantity, hash['QuantityOrdered']
           assert_equal item.quantity, hash['QuantityToShip']
           assert_equal "EA", hash['UOM']

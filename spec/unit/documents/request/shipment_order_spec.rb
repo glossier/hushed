@@ -123,7 +123,7 @@ module Hushed
 
         def assert_line_item(expected_line_item, line_item)
           assert_equal expected_line_item.sku.to_s, line_item['ItemNumber']
-          assert_equal expected_line_item.id.to_s, line_item['Line']
+          assert_equal expected_line_item.sku.hash.abs, line_item['Line'].to_i
           assert_equal expected_line_item.quantity.to_s, line_item['QuantityOrdered']
           assert_equal expected_line_item.quantity.to_s, line_item['QuantityToShip']
           assert_equal "EA", line_item['UOM']
