@@ -65,7 +65,10 @@ module Hushed
         def add_items_to_shipment_order(items, xml)
           item_hashes = convert_to_hashes(items)
           grouped_items = group_items_by_sku(item_hashes)
-          grouped_items.each { |hash| xml.OrderDetails(hash) }
+          grouped_items.each_with_index do |hash, index|
+            hash['Line'] = index + 1
+            xml.OrderDetails(hash)
+          end
         end
 
         def convert_to_hashes(items)

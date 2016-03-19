@@ -45,6 +45,23 @@ module Hushed
           assert_line_item(@order.line_items.first, order_details.first)
         end
 
+        it "uses a sequence as the Line attribute of the OrderDetails" do
+          order = OrderDouble.example(line_items: [
+                    LineItemDouble.example(sku: "SKU-1"),
+                    LineItemDouble.example(sku: "SKU-2"),
+                    LineItemDouble.example(sku: "SKU-3")
+                  ])
+          shipment = ShipmentDouble.example(order: order)
+
+          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+          order_details = document.css('OrderDetails')
+          assert_equal "1", order_details[0]['Line']
+          assert_equal "2", order_details[1]['Line']
+          assert_equal "3", order_details[2]['Line']
+        end
+
         it "explodes phase 1 items into individual skus" do
           phase_1_set = LineItemDouble.example(sku: "GPS1-5")
           order = OrderDouble.example(line_items: [
@@ -123,7 +140,7 @@ module Hushed
 
         def assert_line_item(expected_line_item, line_item)
           assert_equal expected_line_item.sku.to_s, line_item['ItemNumber']
-          assert_equal expected_line_item.sku.hash.abs, line_item['Line'].to_i
+          assert_equal "1", line_item['Line']
           assert_equal expected_line_item.quantity.to_s, line_item['QuantityOrdered']
           assert_equal expected_line_item.quantity.to_s, line_item['QuantityToShip']
           assert_equal "EA", line_item['UOM']
