@@ -53,10 +53,9 @@ module Hushed
                   ])
           shipment = ShipmentDouble.example(order: order)
 
-          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+          message = ShipmentOrder.new(shipment: shipment, client: @client)
 
-          document = Nokogiri::XML::Document.parse(message.to_xml)
-          order_details = document.css('OrderDetails')
+          order_details = order_details_from(message)
           assert_equal "1", order_details[0]['Line']
           assert_equal "2", order_details[1]['Line']
           assert_equal "3", order_details[2]['Line']
@@ -70,10 +69,9 @@ module Hushed
                   ])
           shipment = ShipmentDouble.example(order: order)
 
-          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+          message = ShipmentOrder.new(shipment: shipment, client: @client)
 
-          document = Nokogiri::XML::Document.parse(message.to_xml)
-          order_details = document.css('OrderDetails')
+          order_details = order_details_from(message)
           assert_equal 5, order_details.count
           assert_equal "GMJC100", order_details[0]['ItemNumber']
           assert_equal "GPM100", order_details[1]['ItemNumber']
@@ -93,10 +91,9 @@ module Hushed
           ])
           shipment = ShipmentDouble.example(order: order)
 
-          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+          message = ShipmentOrder.new(shipment: shipment, client: @client)
 
-          document = Nokogiri::XML::Document.parse(message.to_xml)
-          order_details = document.css('OrderDetails')
+          order_details = order_details_from(message)
           assert_equal 4, order_details.count
           assert_equal "GBB200", order_details[0]['ItemNumber']
           assert_equal "GSC300", order_details[1]['ItemNumber']
@@ -115,15 +112,28 @@ module Hushed
           ])
           shipment = ShipmentDouble.example(order: order)
 
-          message = ShipmentOrder.new(:shipment => shipment, :client => @client)
+          message = ShipmentOrder.new(shipment: shipment, client: @client)
 
-          document = Nokogiri::XML::Document.parse(message.to_xml)
-          order_details = document.css('OrderDetails')
+          order_details = order_details_from(message)
           assert_equal 3, order_details.count
           assert_equal "GBB200", order_details[0]['ItemNumber']
           assert_equal "5", order_details[0]['QuantityOrdered']
           assert_equal "5", order_details[0]['QuantityToShip']
         end
+
+      it 'strips the -set postfix from the SKUS' do
+        order = OrderDouble.example(line_items: [
+          LineItemDouble.example(sku: "ABC-SET"),
+          LineItemDouble.example(sku: "DEF")
+        ])
+        shipment = ShipmentDouble.example(order: order)
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+
+        order_details = order_details_from(message)
+        assert_equal "ABC", order_details[0]['ItemNumber']
+        assert_equal "DEF", order_details[1]['ItemNumber']
+      end
 
       private
 
@@ -156,6 +166,11 @@ module Hushed
           assert_equal address.state.name, node['State']
           assert_equal address.zipcode, node['PostalCode']
           assert_equal address.country.name, node['Country']
+        end
+
+        def order_details_from(message)
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+          document.css('OrderDetails')
         end
 
       end

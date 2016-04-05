@@ -36,6 +36,20 @@ module Hushed
           assert_equal "EA", hash['UOM']
           assert_equal item.price, hash['Price']
         end
+
+        it "strip the postfix '-SET' from the sku" do
+          item = LineItemDouble.example(sku: "ABC-SET")
+
+          assert_equal "ABC", line_item_hash(item)['ItemNumber']
+        end
+
+        it "strip the postfix '-SET' from the sku" do
+          part = PartLineItemDouble.example(
+            variant: VariantDouble.example(sku: "ABC-SET")
+          )
+
+          assert_equal "ABC", part_line_item_hash(part)['ItemNumber']
+        end
       end
     end
   end

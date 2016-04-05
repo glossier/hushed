@@ -4,7 +4,7 @@ module Hushed
       module HashConverter
         def part_line_item_hash(part)
           {
-            'ItemNumber'      => part.variant.sku,
+            'ItemNumber'      => normalize_sku(part.variant.sku),
             'Line'            => part.variant.id,
             'QuantityOrdered' => part.line_item.quantity,
             'QuantityToShip'  => part.line_item.quantity,
@@ -15,7 +15,7 @@ module Hushed
 
         def line_item_hash(item)
           {
-            'ItemNumber'      => item.sku,
+            'ItemNumber'      => normalize_sku(item.sku),
             'Line'            => item.id,
             'QuantityOrdered' => item.quantity,
             'QuantityToShip'  => item.quantity,
@@ -49,6 +49,11 @@ module Hushed
             'Country'    => bill_address.country.name
           }
         end
+
+        private
+          def normalize_sku(sku)
+            sku.chomp("-SET")
+          end
       end
     end
   end
