@@ -114,7 +114,7 @@ module Hushed
         end
 
         def order_items
-          @shipment.order.line_items
+          @shipment.inventory_units.map { |unit| unit.line_item }
         end
 
         def order_type
