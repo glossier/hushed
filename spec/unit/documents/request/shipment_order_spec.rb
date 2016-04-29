@@ -46,12 +46,11 @@ module Hushed
         end
 
         it "uses a sequence as the Line attribute of the OrderDetails" do
-          order = OrderDouble.example(line_items: [
-                    LineItemDouble.example(sku: "SKU-1"),
-                    LineItemDouble.example(sku: "SKU-2"),
-                    LineItemDouble.example(sku: "SKU-3")
-                  ])
-          shipment = ShipmentDouble.example(order: order)
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(sku: "SKU-1"),
+            InventoryUnitDouble.example(sku: "SKU-2"),
+            InventoryUnitDouble.example(sku: "SKU-3")
+          ])
 
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
@@ -63,11 +62,10 @@ module Hushed
 
         it "explodes phase 1 items into individual skus" do
           phase_1_set = LineItemDouble.example(sku: "GPS1-5")
-          order = OrderDouble.example(line_items: [
-                    phase_1_set,
-                    LineItemDouble.example
-                  ])
-          shipment = ShipmentDouble.example(order: order)
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(line_item: phase_1_set),
+            InventoryUnitDouble.example
+          ])
 
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
@@ -85,11 +83,10 @@ module Hushed
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GSC300")),
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GML100"))
           ])
-          order = OrderDouble.example(line_items: [
-            line_item_with_parts,
-            LineItemDouble.example
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(line_item: line_item_with_parts),
+            InventoryUnitDouble.example
           ])
-          shipment = ShipmentDouble.example(order: order)
 
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
@@ -106,11 +103,12 @@ module Hushed
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GSC300")),
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GML100"))
           ], quantity: 2)
-          order = OrderDouble.example(line_items: [
-            phase_2,
-            LineItemDouble.example(sku: "GBB200", quantity: 3)
+          another_item = LineItemDouble.example(sku: "GBB200", quantity: 3)
+
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(line_item: phase_2),
+            InventoryUnitDouble.example(line_item: another_item)
           ])
-          shipment = ShipmentDouble.example(order: order)
 
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
@@ -122,11 +120,10 @@ module Hushed
         end
 
       it 'strips the -set postfix from the SKUS' do
-        order = OrderDouble.example(line_items: [
-          LineItemDouble.example(sku: "ABC-SET"),
-          LineItemDouble.example(sku: "DEF")
+        shipment = ShipmentDouble.example(inventory_units: [
+          InventoryUnitDouble.example(sku: "ABC-SET"),
+          InventoryUnitDouble.example(sku: "DEF")
         ])
-        shipment = ShipmentDouble.example(order: order)
 
         message = ShipmentOrder.new(shipment: shipment, client: @client)
 

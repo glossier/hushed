@@ -62,7 +62,6 @@ class LineItemDouble
     @price = options[:price]
     @sku = options[:sku]
     @product = options[:product]
-
     @part_line_items = options[:part_line_items].map do |part|
       PartLineItemDouble.example(
         id: part.id,
@@ -70,6 +69,24 @@ class LineItemDouble
         line_item: LineItemDouble.example(quantity: @quantity)
       )
     end
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+end
+
+class InventoryUnitDouble
+  DEFAULT_OPTIONS = {
+    id: 123456,
+    line_item: LineItemDouble.example
+  }
+
+  attr_reader :id, :line_item
+  def initialize(options = {})
+    @id = options[:id]
+    @line_item = options[:line_item]
+    @line_item = LineItemDouble.example(sku: options[:sku]) if options.key? :sku
   end
 
   def self.example(options = {})
@@ -261,12 +278,13 @@ class ShipmentDouble
     shipping_method: ShippingMethodDouble.example,
     number: "H#{rand.to_s[2..11]}",
     order: OrderDouble.example,
+    inventory_units: [InventoryUnitDouble.example],
     address: AddressDouble.example,
     state: "pending",
     created_at: Time.new(2013, 04, 06, 13, 45, 00)
   }
 
-  attr_reader :order, :number, :address, :shipping_method, :created_at
+  attr_reader :order, :number, :address, :shipping_method, :inventory_units, :created_at
 
   def initialize(options = {})
     @order = options[:order]
@@ -274,6 +292,7 @@ class ShipmentDouble
     @address = options[:address]
     @shipping_method = options[:shipping_method]
     @created_at = options[:created_at]
+    @inventory_units = options[:inventory_units]
   end
 
   def self.example(options = {})
