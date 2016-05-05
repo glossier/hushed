@@ -1,3 +1,5 @@
+require 'hushed/line_item'
+
 module Hushed
   class Phase1Set
 
@@ -27,27 +29,24 @@ module Hushed
     end
 
     def milky_jelly
-      line_item(97 , "GMJC100", 18.0)
+      line_item("GMJC100", 18.0)
     end
 
     def priming_moisturizer
-      line_item( 3, "GPM100", 25.0)
+      line_item("GPM100", 25.0)
     end
 
     def balm_dotcom
-      line_item(96, "GBD100-3", 12.0)
+      line_item("GBD100-3", 12.0)
     end
 
     def skin_tint
-      line_item(6, SKUS[@item.sku], 26.0)
+      line_item(SKUS[@item.sku], 26.0)
     end
 
-    def line_item(id, sku, price)
-      LineItem.new(sku, id, @item.quantity, price)
+    def line_item(sku, price)
+      LineItem.new(sku, @item.quantity, price)
     end
 
-  end
-
-  class LineItem < Struct.new(:sku, :id, :quantity, :price)
   end
 end

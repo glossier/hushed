@@ -10,7 +10,7 @@ module Hushed
     end
 
     it "returns a collection of items included in the Phase 1 Set" do
-      phase1Set = Hushed::Phase1Set.new(line_item("GPS1-5", 2))
+      phase1Set = Phase1Set.new(line_item("GPS1-5", 2))
       items = phase1Set.included_items
 
       assert_equal 4, items.count
@@ -48,7 +48,7 @@ module Hushed
     end
 
     def assert_includes_all(collection, expected)
-      collection.each { |item| assert_includes collection, item }
+      expected.each { |item| assert_includes collection, item }
     end
 
     def line_item(sku = "GPS1-5", quantity = 1)
@@ -57,19 +57,19 @@ module Hushed
 
 
     def milky_jelly
-      LineItem.new("GMJC100", 97, 2, 18.0)
+      LineItem.new("GMJC100", 2, 18.0)
     end
 
     def priming_moisturizer
-      LineItem.new("GPM100", 3, 2, 25.0)
+      LineItem.new("GPM100", 2, 25.0)
     end
 
     def balm_dotcom
-      LineItem.new("GPM100", 3, 2, 25.0)
+      LineItem.new("GPM100", 2, 25.0)
     end
 
     def skin_tint
-      LineItem.new("GPST100", 6, 2, 26.0)
+      LineItem.new("GPST100 - 2", 2, 26.0)
     end
 
   end

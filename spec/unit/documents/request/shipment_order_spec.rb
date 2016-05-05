@@ -77,6 +77,21 @@ module Hushed
           assert_equal "GPST100 - 2", order_details[3]['ItemNumber']
         end
 
+        it "explodes Balm Dotcom trio into individual skus" do
+          balm_trio = LineItemDouble.example(sku: "GBDT")
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(line_item: balm_trio)
+          ])
+
+          message = ShipmentOrder.new(shipment: shipment, client: @client)
+
+          order_details = order_details_from(message)
+          assert_equal 3, order_details.count
+          assert_equal "GBD300", order_details[0]['ItemNumber']
+          assert_equal "GBD400", order_details[1]['ItemNumber']
+          assert_equal "GBD500", order_details[2]['ItemNumber']
+        end
+
         it "explodes the line items into parts when applicable" do
           line_item_with_parts = LineItemDouble.example(part_line_items: [
               PartLineItemDouble.example(variant: VariantDouble.example(sku: "GBB200")),

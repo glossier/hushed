@@ -1,6 +1,7 @@
 require 'forwardable'
 require "hushed/documents/request/hash_converter"
 require 'hushed/phase_1_set'
+require 'hushed/balm_dotcom_trio'
 
 module Hushed
   module Documents
@@ -74,7 +75,9 @@ module Hushed
         def convert_to_hashes(items)
           items.map do |item|
             if Phase1Set.match(item)
-              add_individual_phase_1_items(item)
+              add_individual_items(Phase1Set.new(item).included_items)
+            elsif BalmDotcomTrio.match(item)
+              add_individual_items(BalmDotcomTrio.new(item).included_items)
             elsif contain_parts? item
               add_item_parts(item.part_line_items)
             else
@@ -99,9 +102,8 @@ module Hushed
           part_line_items.map { |part| part_line_item_hash(part) }
         end
 
-        def add_individual_phase_1_items(phase_1_item)
-          phase_1 = Phase1Set.new(phase_1_item).included_items
-          phase_1.map { |item| line_item_hash(item) }
+        def add_individual_items(items)
+          items.map { |line_item| line_item_hash(line_item) }
         end
 
         def update_quantity(hash, quantity)
