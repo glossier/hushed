@@ -26,15 +26,15 @@ module Hushed
     end
 
     def mint_balm
-      LineItem.new("GBD300", 4, 12.0)
+      LineItem.new("GBD300", 4, 10.0)
     end
 
     def cherry_balm
-      LineItem.new("GBD400", 4, 12.0)
+      LineItem.new("GBD400", 4, 10.0)
     end
 
     def rose_balm
-      LineItem.new("GBD500", 4, 12.0)
+      LineItem.new("GBD500", 4, 10.0)
     end
   end
 end

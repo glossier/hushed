@@ -20,17 +20,17 @@ module Hushed
     end
 
   private
-  
+
     def mint_balm
-      LineItem.new("GBD300", @item.quantity, 12.0)
+      LineItem.new("GBD300", @item.quantity, 10.0)
     end
 
     def cherry_balm
-      LineItem.new("GBD400", @item.quantity, 12.0)
+      LineItem.new("GBD400", @item.quantity, 10.0)
     end
 
     def rose_balm
-      LineItem.new("GBD500", @item.quantity, 12.0)
+      LineItem.new("GBD500", @item.quantity, 10.0)
     end
   end
 end
