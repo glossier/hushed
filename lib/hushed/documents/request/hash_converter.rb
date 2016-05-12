@@ -2,23 +2,11 @@ module Hushed
   module Documents
     module Request
       module HashConverter
-        def part_line_item_hash(part)
+        def order_details(item)
           {
-            'ItemNumber'      => normalize_sku(part.variant.sku),
-            'QuantityOrdered' => part.line_item.quantity,
-            'QuantityToShip'  => part.line_item.quantity,
+            'ItemNumber'      => normalize_sku(item.variant.sku),
             'UOM'             => 'EA',
-            'Price'           => part.variant.price
-          }
-        end
-
-        def line_item_hash(item)
-          {
-            'ItemNumber'      => normalize_sku(item.sku),
-            'QuantityOrdered' => item.quantity,
-            'QuantityToShip'  => item.quantity,
-            'UOM'             => 'EA',
-            'Price'           => item.price
+            'Price'           => item.variant.price
           }
         end
 

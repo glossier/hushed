@@ -5,12 +5,12 @@ module Hushed
   describe "Hushed::BalmDotcomTrio" do
 
     it "checks if an item is Balm Dotcom trio" do
-      assert BalmDotcomTrio.match(line_item("GBDT"))
-      refute BalmDotcomTrio.match(line_item("any-other-sku"))
+      assert BalmDotcomTrio.match(inventory_unit("GBDT"))
+      refute BalmDotcomTrio.match(inventory_unit("any-other-sku"))
     end
 
     it "returns a collection of individual balms included in the trio" do
-      balm_dotcom_trio = BalmDotcomTrio.new(line_item("GBDT", 4))
+      balm_dotcom_trio = BalmDotcomTrio.new(inventory_unit("GBDT", 4))
       items = balm_dotcom_trio.included_items
 
       assert_equal 3, items.count
@@ -21,20 +21,22 @@ module Hushed
       expected.each { |item| assert_includes collection, item }
     end
 
-    def line_item(sku, quantity = 1)
-      LineItemDouble.example(sku: sku, quantity: quantity)
+    def inventory_unit(sku, quantity = 1)
+      InventoryUnitDouble.example(
+          variant: VariantDouble.example(sku: sku)
+      )
     end
 
     def mint_balm
-      LineItem.new("GBD300", 4, 10.0)
+      InventoryUnit.new("GBD300", 10.0)
     end
 
     def cherry_balm
-      LineItem.new("GBD400", 4, 10.0)
+      InventoryUnit.new("GBD400", 10.0)
     end
 
     def rose_balm
-      LineItem.new("GBD500", 4, 10.0)
+      InventoryUnit.new("GBD500", 10.0)
     end
   end
 end

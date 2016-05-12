@@ -52,23 +52,15 @@ class LineItemDouble
     quantity: 1,
     price: '12.95',
     sku: "ABC-123",
-    part_line_items: []
   }
 
-  attr_reader :id, :quantity, :price, :sku, :product, :part_line_items
+  attr_reader :id, :quantity, :price, :sku, :product
   def initialize(options = {})
     @id = options[:id]
     @quantity = options[:quantity]
     @price = options[:price]
     @sku = options[:sku]
     @product = options[:product]
-    @part_line_items = options[:part_line_items].map do |part|
-      PartLineItemDouble.example(
-        id: part.id,
-        variant: part.variant,
-        line_item: LineItemDouble.example(quantity: @quantity)
-      )
-    end
   end
 
   def self.example(options = {})
@@ -79,33 +71,13 @@ end
 class InventoryUnitDouble
   DEFAULT_OPTIONS = {
     id: 123456,
-    line_item: LineItemDouble.example
+    variant: VariantDouble.example
   }
 
-  attr_reader :id, :line_item
-  def initialize(options = {})
-    @id = options[:id]
-    @line_item = options[:line_item]
-    @line_item = LineItemDouble.example(sku: options[:sku]) if options.key? :sku
-  end
-
-  def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
-  end
-end
-
-class PartLineItemDouble
-  DEFAULT_OPTIONS = {
-    id: 444555,
-    variant: VariantDouble.example,
-    line_item: LineItemDouble.example
-  }
-
-  attr_reader :id, :variant, :line_item
+  attr_reader :id, :line_item, :variant
   def initialize(options = {})
     @id = options[:id]
     @variant = options[:variant]
-    @line_item = options[:line_item]
   end
 
   def self.example(options = {})

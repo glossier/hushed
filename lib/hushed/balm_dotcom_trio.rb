@@ -1,14 +1,14 @@
-require 'hushed/line_item'
+require 'hushed/inventory_unit'
 
 module Hushed
   class BalmDotcomTrio
 
-    def initialize(item)
-      @item = item
+    def initialize(inventory_unit)
+      @inventory_unit = inventory_unit
     end
 
-    def self.match(item)
-      item.sku == 'GBDT'
+    def self.match(inventory_unit)
+      inventory_unit.variant.sku == 'GBDT'
     end
 
     def included_items
@@ -22,15 +22,15 @@ module Hushed
   private
 
     def mint_balm
-      LineItem.new("GBD300", @item.quantity, 10.0)
+      InventoryUnit.new("GBD300", 10.0)
     end
 
     def cherry_balm
-      LineItem.new("GBD400", @item.quantity, 10.0)
+      InventoryUnit.new("GBD400", 10.0)
     end
 
     def rose_balm
-      LineItem.new("GBD500", @item.quantity, 10.0)
+      InventoryUnit.new("GBD500", 10.0)
     end
   end
 end

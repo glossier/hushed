@@ -1,4 +1,4 @@
-require 'hushed/line_item'
+require 'hushed/inventory_unit'
 
 module Hushed
   class Phase1Set
@@ -11,12 +11,12 @@ module Hushed
       "GPS5-5" => "GPST500"
     }
 
-    def initialize(item)
-      @item = item
+    def initialize(inventory_unit)
+      @inventory_unit = inventory_unit
     end
 
-    def self.match(item)
-      SKUS.key? item.sku
+    def self.match(inventory_unit)
+      SKUS.key? inventory_unit.variant.sku
     end
 
     def included_items
@@ -29,23 +29,23 @@ module Hushed
     end
 
     def milky_jelly
-      line_item("GMJC100", 18.0)
+      inventory_unit("GMJC100", 18.0)
     end
 
     def priming_moisturizer
-      line_item("GPM100", 25.0)
+      inventory_unit("GPM100", 25.0)
     end
 
     def balm_dotcom
-      line_item("GBD100-3", 12.0)
+      inventory_unit("GBD100-3", 12.0)
     end
 
     def skin_tint
-      line_item(SKUS[@item.sku], 26.0)
+      inventory_unit(SKUS[@inventory_unit.variant.sku], 26.0)
     end
 
-    def line_item(sku, price)
-      LineItem.new(sku, @item.quantity, price)
+    def inventory_unit(sku, price)
+      InventoryUnit.new(sku, price)
     end
 
   end
