@@ -11,7 +11,7 @@ module Hushed
           @shipment = ShipmentDouble.example
           @order = @shipment.order
           @client = ClientDouble.new(:client_id => 'HUSHED', :business_unit => 'HUSHED', :warehouse => 'SPACE')
-          @object = @shipment_order = ShipmentOrder.new(shipment: @shipment, client: @client)
+          @object = @shipment_oddrder = ShipmentOrder.new(shipment: @shipment, client: @client)
         end
 
         it "should raise an error if an shipment wasn't passed in" do
@@ -42,16 +42,15 @@ module Hushed
 
           order_details = document.css('OrderDetails')
           assert_equal 1, order_details.length
-          assert_line_item(@order.line_items.first, order_details.first)
+          assert_order_details(@shipment.inventory_units.first, order_details.first)
         end
 
         it "uses a sequence as the Line attribute of the OrderDetails" do
-          order = OrderDouble.example(line_items: [
-                    LineItemDouble.example(sku: "SKU-1"),
-                    LineItemDouble.example(sku: "SKU-2"),
-                    LineItemDouble.example(sku: "SKU-3")
-                  ])
-          shipment = ShipmentDouble.example(order: order)
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "SKU-1")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "SKU-2")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "SKU-3"))
+          ])
 
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
@@ -62,12 +61,12 @@ module Hushed
         end
 
         it "explodes phase 1 items into individual skus" do
-          phase_1_set = LineItemDouble.example(sku: "GPS1-5")
-          order = OrderDouble.example(line_items: [
-                    phase_1_set,
-                    LineItemDouble.example
-                  ])
-          shipment = ShipmentDouble.example(order: order)
+          phase_1_set = VariantDouble.example(sku: "GPS1-5")
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(variant: phase_1_set),
+            InventoryUnitDouble.example
+          ])
+
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
           order_details = order_details_from(message)
@@ -79,11 +78,10 @@ module Hushed
         end
 
         it "explodes Balm Dotcom trio into individual skus" do
-          balm_trio = LineItemDouble.example(sku: "GBDT")
-          order = OrderDouble.example(line_items: [
-                    balm_trio
+          balm_trio = VariantDouble.example(sku: "GBDT")
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(variant: balm_trio)
           ])
-          shipment = ShipmentDouble.example(order: order)
 
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
@@ -95,52 +93,47 @@ module Hushed
         end
 
         it "explodes the line items into parts when applicable" do
-          line_item_with_parts = LineItemDouble.example(part_line_items: [
-              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GBB200")),
-              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GSC300")),
-              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GML100"))
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GSC300")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GML100")),
+            InventoryUnitDouble.example
           ])
-          order = OrderDouble.example(line_items: [
-            line_item_with_parts,
-            LineItemDouble.example
-          ])
-         shipment = ShipmentDouble.example(order: order)
 
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
           order_details = order_details_from(message)
           assert_equal 4, order_details.count
+          order_details.each { |details| assert_equal "1", details['QuantityOrdered']}
           assert_equal "GBB200", order_details[0]['ItemNumber']
           assert_equal "GSC300", order_details[1]['ItemNumber']
           assert_equal "GML100", order_details[2]['ItemNumber']
         end
 
         it "groups duplicate line items together" do
-          phase_2 = LineItemDouble.example(part_line_items: [
-              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GBB200")),
-              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GSC300")),
-              PartLineItemDouble.example(variant: VariantDouble.example(sku: "GML100"))
-          ], quantity: 2)
-          order = OrderDouble.example(line_items: [
-             phase_2,
-             LineItemDouble.example(sku: "GBB200", quantity: 3)
-             ])
-          shipment = ShipmentDouble.example(order: order)
+          shipment = ShipmentDouble.example(inventory_units: [
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GSC300")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GSC300")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GML100")),
+            InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200"))
+          ])
+
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
           order_details = order_details_from(message)
           assert_equal 3, order_details.count
           assert_equal "GBB200", order_details[0]['ItemNumber']
-          assert_equal "5", order_details[0]['QuantityOrdered']
-          assert_equal "5", order_details[0]['QuantityToShip']
+          assert_equal "3", order_details[0]['QuantityOrdered']
+          assert_equal "3", order_details[0]['QuantityToShip']
         end
 
       it 'strips the -set postfix from the SKUS' do
-        order = OrderDouble.example(line_items: [
-          LineItemDouble.example(sku: "ABC-SET"),
-          LineItemDouble.example(sku: "DEF")
+        shipment = ShipmentDouble.example(inventory_units: [
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "ABC-SET")),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "DEF"))
         ])
-        shipment = ShipmentDouble.example(order: order)
 
         message = ShipmentOrder.new(shipment: shipment, client: @client)
 
@@ -162,13 +155,13 @@ module Hushed
           assert_equal 'GROUND', shipping['ServiceLevel']
         end
 
-        def assert_line_item(expected_line_item, line_item)
-          assert_equal expected_line_item.sku.to_s, line_item['ItemNumber']
-          assert_equal "1", line_item['Line']
-          assert_equal expected_line_item.quantity.to_s, line_item['QuantityOrdered']
-          assert_equal expected_line_item.quantity.to_s, line_item['QuantityToShip']
-          assert_equal "EA", line_item['UOM']
-          assert_equal expected_line_item.price, line_item['Price']
+        def assert_order_details(expected, actual)
+          assert_equal expected.variant.sku.to_s, actual['ItemNumber']
+          assert_equal "1", actual['Line']
+          assert_equal "1", actual['QuantityOrdered']
+          assert_equal "1", actual['QuantityToShip']
+          assert_equal "EA", actual['UOM']
+          assert_equal expected.variant.price, actual['Price']
         end
 
         def assert_address(email, address, node)

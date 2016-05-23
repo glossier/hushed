@@ -57,7 +57,7 @@ module Hushed
                 end
               }
 
-              add_items_to_shipment_order(order_items, xml)
+              add_items_to_shipment_order(@shipment.inventory_units, xml)
             }
           end
           builder.to_xml
@@ -78,10 +78,8 @@ module Hushed
               add_individual_items(Phase1Set.new(item).included_items)
             elsif BalmDotcomTrio.match(item)
               add_individual_items(BalmDotcomTrio.new(item).included_items)
-            elsif contain_parts? item
-              add_item_parts(item.part_line_items)
             else
-              line_item_hash(item)
+              order_details(item)
             end
           end.flatten
         end
@@ -90,20 +88,12 @@ module Hushed
           grouped = item_hashes.group_by {|hash| hash['ItemNumber'] }
           grouped.values.map do |hashes|
             hash = hashes.first
-            update_quantity(hash, total_quantity(hashes))
+            update_quantity(hash, hashes.length)
           end
         end
 
-        def contain_parts?(item)
-          item.part_line_items && !item.part_line_items.empty?
-        end
-
-        def add_item_parts(part_line_items)
-          part_line_items.map { |part| part_line_item_hash(part) }
-        end
-
         def add_individual_items(items)
-          items.map { |line_item| line_item_hash(line_item) }
+          items.map { |item| order_details(item) }
         end
 
         def update_quantity(hash, quantity)
@@ -113,10 +103,6 @@ module Hushed
 
         def total_quantity(hashes)
           hashes.map{ |hash| hash['QuantityOrdered'] }.reduce(:+)
-        end
-
-        def order_items
-          @shipment.order.line_items
         end
 
         def order_type
