@@ -57,17 +57,16 @@ module Hushed
       )
     end
 
-
     def milky_jelly
       InventoryUnit.new("GMJC100", 18.0)
     end
 
     def priming_moisturizer
-      InventoryUnit.new("GPM100", 25.0)
+      InventoryUnit.new("GPM100-2", 25.0)
     end
 
     def balm_dotcom
-      InventoryUnit.new("GPM100", 25.0)
+      InventoryUnit.new("GBD100-3", 12.0)
     end
 
     def skin_tint

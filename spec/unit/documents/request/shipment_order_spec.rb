@@ -72,7 +72,7 @@ module Hushed
           order_details = order_details_from(message)
           assert_equal 5, order_details.count
           assert_equal "GMJC100", order_details[0]['ItemNumber']
-          assert_equal "GPM100", order_details[1]['ItemNumber']
+          assert_equal "GPM100-2", order_details[1]['ItemNumber']
           assert_equal "GBD100-3", order_details[2]['ItemNumber']
           assert_equal "GPST100 - 2", order_details[3]['ItemNumber']
         end

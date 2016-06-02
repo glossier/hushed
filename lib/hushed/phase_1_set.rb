@@ -33,7 +33,7 @@ module Hushed
     end
 
     def priming_moisturizer
-      inventory_unit("GPM100", 25.0)
+      inventory_unit("GPM100-2", 25.0)
     end
 
     def balm_dotcom
