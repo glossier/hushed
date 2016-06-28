@@ -1,4 +1,5 @@
 require 'hushed/documents/response/shipment_order_result'
+require 'hushed/documents/response/inventory_summary_document'
 
 module Hushed
   module Response
