@@ -39,7 +39,7 @@ module Hushed
         def inventory_summary
           @inventory_summary ||= @document.css('InventorySummary').first
         end
-        
+
         def get_available_stat(item)
           for item_stat in item.css('ItemStatus')
             return item_stat if item_stat['Status'] == "Avail"
