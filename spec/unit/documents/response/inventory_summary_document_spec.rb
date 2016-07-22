@@ -16,7 +16,7 @@ module Hushed
           assert_equal '2016-06-22 19:36:21 UTC', inventory_summary.message_date.inspect
           assert_equal 'HUSHED', inventory_summary.business_unit
           assert_equal 'QUIET', inventory_summary.warehouse
-          assert_equal ({"GBB100"=>"10000"}), inventory_summary.item_stat_hash(inventory_items[0])
+          assert_equal ({"GBB100"=>"10000"}), inventory_summary.quantity_by_status(inventory_items[0])
         end
 
       end
