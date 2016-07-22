@@ -24,12 +24,12 @@ module Hushed
           @warehouse ||= inventory_summary['Warehouse']
         end
 
-        def item_stat_hash(item)
-          item_stat = {}
-          available_item = get_available_stat(item)
+        def quantity_by_status(item)
+          item_quantity_by_status = {}
+          available_item = get_available_status(item)
           sku = item['ItemNumber']
-          item_stat[sku] = get_available_stat(item)['Quantity']
-          item_stat
+          item_quantity_by_status[sku] = get_available_status(item)['Quantity']
+          item_quantity_by_status
         end
 
         def inventory_items
@@ -40,9 +40,9 @@ module Hushed
           @inventory_summary ||= @document.css('InventorySummary').first
         end
 
-        def get_available_stat(item)
-          for item_stat in item.css('ItemStatus')
-            return item_stat if item_stat['Status'] == "Avail"
+        def get_available_status(item)
+          for item_status in item.css('ItemStatus')
+            return item_status if item_status['Status'] == "Avail"
           end
         end
 
