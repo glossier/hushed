@@ -3,7 +3,7 @@ require 'hushed/documents/response/inventory_summary_document'
 
 module Hushed
   module Response
-    VALID_RESPONSE_TYPES = %w(ShipmentOrderResult)
+    VALID_RESPONSE_TYPES = %w(ShipmentOrderResult InventorySummaryDocument)
 
     def self.valid_type?(type)
       VALID_RESPONSE_TYPES.include?(type)
