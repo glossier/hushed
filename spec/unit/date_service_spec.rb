@@ -5,7 +5,7 @@ module Hushed
   describe "DateService" do
 
     it "builds a date from an integer containing the month date and year" do
-      date = DateService.new.build_date("062916")
+      date = DateService.build_date("062916")
 
       assert_equal 6, date.month
       assert_equal 29, date.day
@@ -18,12 +18,12 @@ module Hushed
       before_yesterday = Date.new(1992, 12, 15)
       real_old = Date.new(1992, 02, 20)
 
-      assert_equal today, DateService.new.most_recent_day([today])
-      assert_equal yesterday, DateService.new.most_recent_day([yesterday, before_yesterday])
-      assert_equal yesterday, DateService.new.most_recent_day([before_yesterday, yesterday])
-      assert_equal today, DateService.new.most_recent_day([before_yesterday, today, yesterday])
-      assert_equal today, DateService.new.most_recent_day([real_old, before_yesterday, yesterday, today])
-      assert_equal today, DateService.new.most_recent_day([real_old, before_yesterday, today, yesterday])
+      assert_equal today, DateService.most_recent_day([today])
+      assert_equal yesterday, DateService.most_recent_day([yesterday, before_yesterday])
+      assert_equal yesterday, DateService.most_recent_day([before_yesterday, yesterday])
+      assert_equal today, DateService.most_recent_day([before_yesterday, today, yesterday])
+      assert_equal today, DateService.most_recent_day([real_old, before_yesterday, yesterday, today])
+      assert_equal today, DateService.most_recent_day([real_old, before_yesterday, today, yesterday])
     end
   end
 

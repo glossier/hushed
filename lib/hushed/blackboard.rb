@@ -56,7 +56,7 @@ module Hushed
       documents.each do |document|
         if document.key.start_with?(doc_name_prefix)
           date_string = get_inventory_summary_date(document.key)
-          date = Hushed::DateService.new.build_date(date_string)
+          date = Hushed::DateService.build_date(date_string)
           documents_matching_prefix[date] = document
         end
         documents_matching_prefix
@@ -66,7 +66,7 @@ module Hushed
 
     def get_latest_from(documents)
       date_array = documents.keys
-      most_recent_day = Hushed::DateService.new.most_recent_day(date_array)
+      most_recent_day = Hushed::DateService.most_recent_day(date_array)
       documents[most_recent_day]
     end
 
