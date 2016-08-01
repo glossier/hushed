@@ -48,6 +48,17 @@ module Hushed
       get_latest_from(documents)
     end
 
+    def remove_document(name)
+      bucket = client.from_quiet_bucket
+      object = bucket.objects.find(name: name)
+      if !object.nil?
+        object.first.delete
+        true
+      else
+        false
+      end
+    end
+
     private
 
     def documents_with_prefix(doc_name_prefix)
