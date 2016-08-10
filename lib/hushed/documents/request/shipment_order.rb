@@ -78,6 +78,8 @@ module Hushed
               add_individual_items(Phase1Set.new(item).included_items)
             elsif BalmDotcomTrio.match(item)
               add_individual_items(BalmDotcomTrio.new(item).included_items)
+            elsif BtrBundle.match(item)
+              add_individual_items(BtrBundle.new(item).included_items)
             else
               order_details(item)
             end
