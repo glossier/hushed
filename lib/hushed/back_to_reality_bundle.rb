@@ -12,10 +12,16 @@ module Hushed
     end
 
     def convert(inventory_units)
-      number_of_bundles(inventory_units).times do
-        replace_parts_with_bundle(inventory_units)
+      quantity_of_bundles_to_add = number_of_bundles(inventory_units);
+
+      converted_units = []
+      inventory_units.map do |unit|
+        converted_units << unit unless part_of_bundle(unit)
       end
-      inventory_units
+      quantity_of_bundles_to_add.times do
+        converted_units << back_to_reality_bundle
+      end
+      converted_units
     end
 
     private
@@ -34,8 +40,11 @@ module Hushed
     end
 
     def replace_parts_with_bundle(inventory_units)
-      inventory_units.delete_if { |unit| part_of_bundle(unit) }
-      inventory_units << back_to_reality_bundle
+      converted_units = []
+
+
+
+      units << back_to_reality_bundle
     end
 
     def is_a_bundle?(inventory_unit)
