@@ -1,5 +1,6 @@
 require 'forwardable'
 require "hushed/documents/request/hash_converter"
+require 'hushed/back_to_reality_bundle'
 
 module Hushed
   module Documents
