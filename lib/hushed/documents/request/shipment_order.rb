@@ -1,7 +1,5 @@
 require 'forwardable'
 require "hushed/documents/request/hash_converter"
-require 'hushed/phase_1_set'
-require 'hushed/balm_dotcom_trio'
 
 module Hushed
   module Documents
@@ -73,16 +71,9 @@ module Hushed
         end
 
         def convert_to_hashes(items)
+          items = BackToRealityBundle.convert(items) if BackToRealityBundle.contained_in?(items)
           items.map do |item|
-            if Phase1Set.match(item)
-              add_individual_items(Phase1Set.new(item).included_items)
-            elsif BalmDotcomTrio.match(item)
-              add_individual_items(BalmDotcomTrio.new(item).included_items)
-            elsif BtrBundle.match(item)
-              add_individual_items(BtrBundle.new(item).included_items)
-            else
-              order_details(item)
-            end
+            order_details(item)
           end.flatten
         end
 
@@ -92,10 +83,6 @@ module Hushed
             hash = hashes.first
             update_quantity(hash, hashes.length)
           end
-        end
-
-        def add_individual_items(items)
-          items.map { |item| order_details(item) }
         end
 
         def update_quantity(hash, quantity)

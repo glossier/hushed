@@ -60,38 +60,6 @@ module Hushed
           assert_equal "3", order_details[2]['Line']
         end
 
-        it "explodes phase 1 items into individual skus" do
-          phase_1_set = VariantDouble.example(sku: "GPS1-5")
-          shipment = ShipmentDouble.example(inventory_units: [
-            InventoryUnitDouble.example(variant: phase_1_set),
-            InventoryUnitDouble.example
-          ])
-
-          message = ShipmentOrder.new(shipment: shipment, client: @client)
-
-          order_details = order_details_from(message)
-          assert_equal 5, order_details.count
-          assert_equal "GMJC100", order_details[0]['ItemNumber']
-          assert_equal "GPM100-2", order_details[1]['ItemNumber']
-          assert_equal "GBD100-3", order_details[2]['ItemNumber']
-          assert_equal "GPST100 - 2", order_details[3]['ItemNumber']
-        end
-
-        it "explodes Balm Dotcom trio into individual skus" do
-          balm_trio = VariantDouble.example(sku: "GBDT")
-          shipment = ShipmentDouble.example(inventory_units: [
-            InventoryUnitDouble.example(variant: balm_trio)
-          ])
-
-          message = ShipmentOrder.new(shipment: shipment, client: @client)
-
-          order_details = order_details_from(message)
-          assert_equal 3, order_details.count
-          assert_equal "GBD300", order_details[0]['ItemNumber']
-          assert_equal "GBD400", order_details[1]['ItemNumber']
-          assert_equal "GBD500", order_details[2]['ItemNumber']
-        end
-
         it "explodes the line items into parts when applicable" do
           shipment = ShipmentDouble.example(inventory_units: [
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200")),
@@ -140,6 +108,22 @@ module Hushed
         order_details = order_details_from(message)
         assert_equal "ABC", order_details[0]['ItemNumber']
         assert_equal "DEF", order_details[1]['ItemNumber']
+      end
+
+      it 'merges the back to reality parts into one bundle' do
+        bundle = LineItemDouble.example(sku: "GBTR")
+        shipment = ShipmentDouble.example(inventory_units: [
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GMASK1-SET"), line_item: bundle),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "headband1-SET"), line_item: bundle),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBD300-SET"), line_item: bundle),
+          InventoryUnitDouble.example
+        ])
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+
+        order_details = order_details_from(message)
+        assert_equal 2, order_details.count
+        assert_includes order_details.map { |detail| detail[:ItemNumber] }, "GBTR"
       end
 
       private
