@@ -1,5 +1,7 @@
 require 'hushed/response'
 require 'hushed/request'
+require 'hushed/date_service'
+
 module Hushed
   class Blackboard
     attr_reader :client
@@ -40,5 +42,49 @@ module Hushed
       end
       namespace.const_get(type).new(:io => contents) if namespace
     end
+
+    def retrieve_latest(document_name_prefix)
+      documents = documents_with_prefix(document_name_prefix)
+      get_latest_from(documents)
+    end
+
+    def remove_document(name)
+      bucket = client.from_quiet_bucket
+      object = bucket.objects.find(name: name)
+      if !object.nil?
+        object.first.delete
+        true
+      else
+        false
+      end
+    end
+
+    private
+
+    def documents_with_prefix(doc_name_prefix)
+      documents = client.from_quiet_bucket.objects
+      documents_matching_prefix = {}
+      documents.each do |document|
+        if document.key.start_with?(doc_name_prefix)
+          date_string = get_inventory_summary_date(document.key)
+          date = Hushed::DateService.build_date(date_string)
+          documents_matching_prefix[date] = document
+        end
+        documents_matching_prefix
+      end
+      documents_matching_prefix
+    end
+
+    def get_latest_from(documents)
+      date_array = documents.keys
+      most_recent_day = Hushed::DateService.most_recent_day(date_array)
+      documents[most_recent_day]
+    end
+
+    def get_inventory_summary_date(file_name)
+      file_name.slice(26..31)
+    end
+
+
   end
 end

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<InventorySummary
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  ClientId="HUSHED"
+  BusinessUnit="HUSHED"
+  Warehouse="QUIET"
+  MessageDate="2016-06-22T19:36:21.6849432Z"
+  xmlns="http://schemas.quietlogistics.com/V2/InventorySummary.xsd">
+  <Inventory
+    ItemNumber="GBB100">
+    <ItemStatus
+      Status="Avail"
+      Quantity="10000" />
+    <ItemStatus
+      Status="Alloc"
+      Quantity="12" />
+  </Inventory>
+</InventorySummary>
