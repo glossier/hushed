@@ -1,6 +1,5 @@
 require 'forwardable'
 require "hushed/documents/request/hash_converter"
-require 'hushed/back_to_reality_bundle'
 
 module Hushed
   module Documents
@@ -56,7 +55,7 @@ module Hushed
                 end
               }
 
-              add_items_to_shipment_order(@shipment.inventory_units, xml)
+              add_items_to_shipment_order(@shipment.inventory_units_to_fulfill, xml)
             }
           end
           builder.to_xml
@@ -72,7 +71,6 @@ module Hushed
         end
 
         def convert_to_hashes(items)
-          items = BackToRealityBundle.convert(items) if BackToRealityBundle.contained_in?(items)
           items.map do |item|
             order_details(item)
           end.flatten

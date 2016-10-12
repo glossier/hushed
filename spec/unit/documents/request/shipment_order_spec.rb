@@ -42,11 +42,11 @@ module Hushed
 
           order_details = document.css('OrderDetails')
           assert_equal 1, order_details.length
-          assert_order_details(@shipment.inventory_units.first, order_details.first)
+          assert_order_details(@shipment.inventory_units_to_fulfill.first, order_details.first)
         end
 
         it "uses a sequence as the Line attribute of the OrderDetails" do
-          shipment = ShipmentDouble.example(inventory_units: [
+          shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "SKU-1")),
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "SKU-2")),
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "SKU-3"))
@@ -61,7 +61,7 @@ module Hushed
         end
 
         it "explodes the line items into parts when applicable" do
-          shipment = ShipmentDouble.example(inventory_units: [
+          shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200")),
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GSC300")),
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GML100")),
@@ -79,7 +79,7 @@ module Hushed
         end
 
         it "groups duplicate line items together" do
-          shipment = ShipmentDouble.example(inventory_units: [
+          shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200")),
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBB200")),
             InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GSC300")),
@@ -98,7 +98,7 @@ module Hushed
         end
 
       it 'strips the -set postfix from the SKUS' do
-        shipment = ShipmentDouble.example(inventory_units: [
+        shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
           InventoryUnitDouble.example(variant: VariantDouble.example(sku: "ABC-SET")),
           InventoryUnitDouble.example(variant: VariantDouble.example(sku: "DEF"))
         ])
@@ -108,22 +108,6 @@ module Hushed
         order_details = order_details_from(message)
         assert_equal "ABC", order_details[0]['ItemNumber']
         assert_equal "DEF", order_details[1]['ItemNumber']
-      end
-
-      it 'merges the back to reality parts into one bundle' do
-        bundle = LineItemDouble.example(sku: "GBTR")
-        shipment = ShipmentDouble.example(inventory_units: [
-          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GMASK1-SET"), line_item: bundle),
-          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "headband1-SET"), line_item: bundle),
-          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GBD300-SET"), line_item: bundle),
-          InventoryUnitDouble.example
-        ])
-
-        message = ShipmentOrder.new(shipment: shipment, client: @client)
-
-        order_details = order_details_from(message)
-        assert_equal 2, order_details.count
-        assert_includes order_details.map { |detail| detail[:ItemNumber] }, "GBTR"
       end
 
       private
