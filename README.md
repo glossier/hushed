@@ -1,6 +1,6 @@
 # Hushed
 
-Client library for integrating with the [Quiet Logistics](http://quietlogistics.com) API 
+Client library for integrating with the [Quiet Logistics](http://quietlogistics.com) API
 
 ## Installation
 
@@ -11,6 +11,7 @@ Add this line to your application's Gemfile:
 And then execute:
 
     $ bundle
+    
 
 Or install it yourself as:
 
