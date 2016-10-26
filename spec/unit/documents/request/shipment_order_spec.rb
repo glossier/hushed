@@ -5,7 +5,6 @@ module Hushed
   module Documents
     module Request
       describe "ShipmentOrder" do
-        # include Hushed::Documents::DocumentInterfaceTestcases
 
         before do
           @shipment = ShipmentDouble.example
@@ -33,10 +32,6 @@ module Hushed
           assert_equal @client.business_unit, document.css('BusinessUnit').first.text
 
           assert_header(document.css('OrderHeader').first)
-          assert_equal @order.gift.present?.to_s, document.css('Gift').first.text
-          assert_equal @order.gift.from, document.css('SONoteType')[0]['GIFTFROM']
-          assert_equal @order.gift.to, document.css('SONoteType')[1]['GIFTTO']
-          assert_equal @order.gift.message, document.css('Comments').first.text
 
           assert_shipping(document.css('ShipMode').first)
 
@@ -46,6 +41,24 @@ module Hushed
           order_details = document.css('OrderDetails')
           assert_equal 1, order_details.length
           assert_order_details(@shipment.inventory_units_to_fulfill.first, order_details.first)
+        end
+
+        it "the XML document should have the associated gift attributes set if the order's gift exists" do
+          message = ShipmentOrder.new(:shipment => @shipment, :client => @client)
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+          assert_equal 'true', document.css('Gift').first.text
+          assert_equal "from", document.css('SONoteType')[0]['GIFTFROM']
+          assert_equal "to", document.css('SONoteType')[1]['GIFTTO']
+          assert_equal "HBD", document.css('Comments').first.text
+        end
+
+        it "the XML document should not have the associated gift attributes set if the order's gift exists" do
+          message = ShipmentOrder.new(:shipment => ShipmentDouble.example(order: OrderDouble.example(gift: nil)), :client => @client)
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+
+          assert_equal 'false', document.css('Gift').first.text
+          assert_empty document.css('SONoteType')
+          assert_empty document.css('Comments')
         end
 
         it "uses a sequence as the Line attribute of the OrderDetails" do

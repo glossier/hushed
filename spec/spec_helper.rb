@@ -216,10 +216,6 @@ class GiftDouble
   def self.example(options = {})
     self.new(DEFAULT_OPTIONS.merge(options))
   end
-
-  def present?
-    true
-  end
 end
 
 class OrderDouble
