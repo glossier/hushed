@@ -196,6 +196,32 @@ class ShippingMethodDouble
   end
 end
 
+class GiftDouble
+  DEFAULT_OPTIONS = {
+    id: 1,
+    active: true,
+    from: "from",
+    to: "to",
+    message: "HBD"
+  }
+
+  attr_reader :from, :to, :message
+
+  def initialize(options = {})
+    @from = options[:from]
+    @to = options[:to]
+    @message = options[:message]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+
+  def present?
+    true
+  end
+end
+
 class OrderDouble
   DEFAULT_OPTIONS = {
     number: "GLO#{rand.to_s[2..11]}",
@@ -206,12 +232,14 @@ class OrderDouble
     created_at: Time.new(2013, 04, 05, 12, 30, 00),
     id: 123456,
     email: 'john@smith.com',
-    total_price: '123.45'
+    total_price: '123.45',
+    gift: GiftDouble.example
   }
 
   attr_reader :line_items, :ship_address, :bill_address, :note, :email
   attr_reader :total_price, :email, :id, :type, :created_at, :shipping_lines
   attr_reader :number
+  attr_reader :gift
 
   def initialize(options = {})
     @line_items = options[:line_items]
@@ -224,6 +252,7 @@ class OrderDouble
     @email = options[:email]
     @total_price = options[:total_price]
     @number = options[:number]
+    @gift = options[:gift]
   end
 
   def self.example(options = {})

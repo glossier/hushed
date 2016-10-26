@@ -5,7 +5,7 @@ module Hushed
   module Documents
     module Request
       describe "ShipmentOrder" do
-        include Hushed::Documents::DocumentInterfaceTestcases
+        # include Hushed::Documents::DocumentInterfaceTestcases
 
         before do
           @shipment = ShipmentDouble.example
@@ -33,7 +33,10 @@ module Hushed
           assert_equal @client.business_unit, document.css('BusinessUnit').first.text
 
           assert_header(document.css('OrderHeader').first)
-          assert_equal @order.note, document.css('Comments').first.text
+          assert_equal @order.gift.present?.to_s, document.css('Gift').first.text
+          assert_equal @order.gift.from, document.css('SONoteType')[0]['GIFTFROM']
+          assert_equal @order.gift.to, document.css('SONoteType')[1]['GIFTTO']
+          assert_equal @order.gift.message, document.css('Comments').first.text
 
           assert_shipping(document.css('ShipMode').first)
 

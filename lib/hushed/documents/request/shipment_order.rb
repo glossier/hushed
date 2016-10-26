@@ -39,7 +39,10 @@ module Hushed
 
                 xml.Extension @shipment.order.number
 
-                xml.Comments @shipment.order.special_instructions
+                xml.Gift @shipment.order.gift.present?
+                xml.SONoteType('GIFTFROM'   => @shipment.order.gift.from)
+                xml.SONoteType('GIFTTO'     => @shipment.order.gift.to)
+                xml.Comments @shipment.order.gift.message
 
                 xml.ShipMode('Carrier'      => @shipment.shipping_method.carrier,
                              'ServiceLevel' => @shipment.shipping_method.service_level)
