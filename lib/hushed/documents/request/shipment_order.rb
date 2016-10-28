@@ -1,5 +1,6 @@
-require 'forwardable'
+require "forwardable"
 require "hushed/documents/request/hash_converter"
+require "hushed/black_tie_bundle"
 
 module Hushed
   module Documents
@@ -71,7 +72,8 @@ module Hushed
         end
 
         def convert_to_hashes(items)
-          items.map do |item|
+          converted_items = BlackTieBundle.convert(items)
+          converted_items.map do |item|
             order_details(item)
           end.flatten
         end

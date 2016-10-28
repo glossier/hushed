@@ -110,6 +110,23 @@ module Hushed
         assert_equal "DEF", order_details[1]['ItemNumber']
       end
 
+      it 'merges the back to reality parts into one bundle' do
+        bundle = LineItemDouble.example(sku: "GHOL-16-1001")
+        shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GEYE-01-WIP1-SET"), line_item: bundle),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GNP0-01-WIP1-SET"), line_item: bundle),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GLIP-01-WIP1-SET"), line_item: bundle),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GHS0-03-WIP1-SET"), line_item: bundle),
+          InventoryUnitDouble.example
+        ])
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+
+        order_details = order_details_from(message)
+        assert_equal 2, order_details.count
+        assert_includes order_details.map { |detail| detail[:ItemNumber] }, "GHOL-16-1001"
+      end
+
       private
 
         def assert_header(header)
