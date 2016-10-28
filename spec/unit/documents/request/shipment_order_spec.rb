@@ -110,7 +110,7 @@ module Hushed
         assert_equal "DEF", order_details[1]['ItemNumber']
       end
 
-      it 'merges the back to reality parts into one bundle' do
+      it 'merges the black tie parts into one bundle' do
         bundle = LineItemDouble.example(sku: "GHOL-16-1001")
         shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
           InventoryUnitDouble.example(variant: VariantDouble.example(sku: "GEYE-01-WIP1-SET"), line_item: bundle),

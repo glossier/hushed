@@ -5,10 +5,10 @@ module Hushed
     extend self
 
     BUNDLE_SKU = "GHOL-16-1001"
-    NUMBER_OR_PARTS = 4;
+    NUMBER_OF_PARTS = 4;
 
     def convert(inventory_units)
-      return inventory_units unless contained_in?(inventory_units)
+      return inventory_units unless contains_bundle?(inventory_units)
 
       quantity_of_bundles_to_add = number_of_bundles(inventory_units);
       converted_units = inventory_units.reject { |unit| part_of_bundle(unit) }
@@ -21,7 +21,7 @@ module Hushed
     private
 
     def number_of_bundles(inventory_units)
-      inventory_units.find_all { |unit| part_of_bundle(unit) }.length / NUMBER_OR_PARTS
+      inventory_units.find_all { |unit| part_of_bundle(unit) }.length / NUMBER_OF_PARTS
     end
 
     def part_of_bundle(inventory_unit)
@@ -33,7 +33,7 @@ module Hushed
       InventoryUnit.new(BUNDLE_SKU, 50.0)
     end
 
-    def contained_in?(inventory_units)
+    def contains_bundle?(inventory_units)
       inventory_units.any? { |unit| part_of_bundle(unit) }
     end
 
