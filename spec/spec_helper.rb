@@ -280,10 +280,11 @@ class ShipmentDouble
     inventory_units_to_fulfill: [InventoryUnitDouble.example],
     address: AddressDouble.example,
     state: "pending",
-    created_at: Time.new(2013, 04, 06, 13, 45, 00)
+    created_at: Time.new(2013, 04, 06, 13, 45, 00),
+    value_added_services: []
   }
 
-  attr_reader :order, :number, :address, :shipping_method, :inventory_units_to_fulfill, :created_at
+  attr_reader :order, :number, :address, :shipping_method, :inventory_units_to_fulfill, :created_at, :value_added_services
 
   def initialize(options = {})
     @order = options[:order]
@@ -292,6 +293,7 @@ class ShipmentDouble
     @shipping_method = options[:shipping_method]
     @created_at = options[:created_at]
     @inventory_units_to_fulfill = options[:inventory_units_to_fulfill]
+    @value_added_services = options[:value_added_services] if options[:value_added_services]
   end
 
   def self.example(options = {})

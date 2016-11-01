@@ -42,10 +42,6 @@ module Hushed
                 xml.Extension @shipment.order.number
 
                 if @shipment.order.gift
-                  xml.Notes('NodeType'   => 'GIFTFROM',
-                                 'NodeValue'  => @shipment.order.gift.from)
-                  xml.Notes('NodeType'   => 'GIFTTO',
-                                 'NodeValue'  => @shipment.order.gift.to)
                   xml.Comments @shipment.order.gift.message
                 end
 
@@ -54,6 +50,13 @@ module Hushed
 
                 xml.ShipTo(ship_to_hash)
                 xml.BillTo(bill_to_hash)
+
+                if @shipment.order.gift
+                  xml.Notes('NoteType'   => 'GIFTFROM',
+                                 'NoteValue'  => @shipment.order.gift.from)
+                  xml.Notes('NoteType'   => 'GIFTTO',
+                                 'NoteValue'  => @shipment.order.gift.to)
+                end
 
                 if @shipment.respond_to?(:value_added_services)
                   @shipment.value_added_services.each do |service|

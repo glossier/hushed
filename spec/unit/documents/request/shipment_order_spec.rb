@@ -11,6 +11,7 @@ module Hushed
           @order = @shipment.order
           @client = ClientDouble.new(:client_id => 'HUSHED', :business_unit => 'HUSHED', :warehouse => 'SPACE')
           @object = @shipment_oddrder = ShipmentOrder.new(shipment: @shipment, client: @client)
+          @xsd = Nokogiri::XML::Schema(File.read('spec/fixtures/documents/schemas/shipment_order.xsd'))
         end
 
         it "should raise an error if an shipment wasn't passed in" do
@@ -48,10 +49,10 @@ module Hushed
           document = Nokogiri::XML::Document.parse(message.to_xml)
 
           assert_equal 'true', document.css('OrderHeader')[0]['Gift']
-          assert_equal "GIFTFROM", document.css('Notes')[0]['NodeType']
-          assert_equal "from", document.css('Notes')[0]['NodeValue']
-          assert_equal "GIFTTO", document.css('Notes')[1]['NodeType']
-          assert_equal "to", document.css('Notes')[1]['NodeValue']
+          assert_equal "GIFTFROM", document.css('Notes')[0]['NoteType']
+          assert_equal "from", document.css('Notes')[0]['NoteValue']
+          assert_equal "GIFTTO", document.css('Notes')[1]['NoteType']
+          assert_equal "to", document.css('Notes')[1]['NoteValue']
           assert_equal "HBD", document.css('Comments')[0].text
         end
 
@@ -144,6 +145,25 @@ module Hushed
         order_details = order_details_from(message)
         assert_equal 2, order_details.count
         assert_includes order_details.map { |detail| detail[:ItemNumber] }, "GHOL-16-1001"
+      end
+
+      it 'lists the packaging instructions if shipment.value_added_service exists' do
+        shipment = ShipmentDouble.example(value_added_services: [{ service: 'bagging', service_type: 'phase 1 set' }])
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+        document = Nokogiri::XML::Document.parse(message.to_xml)
+
+        assert_equal "bagging", document.css('OrderHeader ValueAddedService')[0]['Service']
+        assert_equal "phase 1 set", document.css('OrderHeader ValueAddedService')[0]['ServiceType']
+      end
+
+      it 'is valid against the xml schema definition' do
+        shipment = ShipmentDouble.example()
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+        document = Nokogiri::XML::Document.parse(message.to_xml)
+
+        assert_empty @xsd.validate(document)
       end
 
       private
