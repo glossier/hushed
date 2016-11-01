@@ -36,14 +36,16 @@ module Hushed
 
               xml.OrderHeader('OrderNumber' => @shipment_number,
                               'OrderType'   => order_type,
-                              'OrderDate'   => @shipment.created_at.utc.iso8601) {
+                              'OrderDate'   => @shipment.created_at.utc.iso8601,
+                              'Gift'        => !!@shipment.order.gift) {
 
                 xml.Extension @shipment.order.number
 
-                xml.Gift !!@shipment.order.gift
                 if @shipment.order.gift
-                  xml.SONoteType('GIFTFROM'   => @shipment.order.gift.from)
-                  xml.SONoteType('GIFTTO'     => @shipment.order.gift.to)
+                  xml.SONoteType('NodeType'   => 'GIFTFROM',
+                                 'NodeValue'  => @shipment.order.gift.from)
+                  xml.SONoteType('NodeType'   => 'GIFTTO',
+                                 'NodeValue'  => @shipment.order.gift.to)
                   xml.Comments @shipment.order.gift.message
                 end
 

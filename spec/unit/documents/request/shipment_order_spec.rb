@@ -46,17 +46,20 @@ module Hushed
         it "the XML document should have the associated gift attributes set if the order's gift exists" do
           message = ShipmentOrder.new(:shipment => @shipment, :client => @client)
           document = Nokogiri::XML::Document.parse(message.to_xml)
-          assert_equal 'true', document.css('Gift').first.text
-          assert_equal "from", document.css('SONoteType')[0]['GIFTFROM']
-          assert_equal "to", document.css('SONoteType')[1]['GIFTTO']
-          assert_equal "HBD", document.css('Comments').first.text
+
+          assert_equal 'true', document.css('OrderHeader')[0]['Gift']
+          assert_equal "GIFTFROM", document.css('SONoteType')[0]['NodeType']
+          assert_equal "from", document.css('SONoteType')[0]['NodeValue']
+          assert_equal "GIFTTO", document.css('SONoteType')[1]['NodeType']
+          assert_equal "to", document.css('SONoteType')[1]['NodeValue']
+          assert_equal "HBD", document.css('Comments')[0].text
         end
 
         it "the XML document should not have the associated gift attributes set if the order's gift exists" do
           message = ShipmentOrder.new(:shipment => ShipmentDouble.example(order: OrderDouble.example(gift: nil)), :client => @client)
           document = Nokogiri::XML::Document.parse(message.to_xml)
 
-          assert_equal 'false', document.css('Gift').first.text
+          assert_equal 'false', document.css('OrderHeader')[0]['Gift']
           assert_empty document.css('SONoteType')
           assert_empty document.css('Comments')
         end
