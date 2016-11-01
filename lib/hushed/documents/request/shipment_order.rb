@@ -42,9 +42,9 @@ module Hushed
                 xml.Extension @shipment.order.number
 
                 if @shipment.order.gift
-                  xml.SONoteType('NodeType'   => 'GIFTFROM',
+                  xml.Notes('NodeType'   => 'GIFTFROM',
                                  'NodeValue'  => @shipment.order.gift.from)
-                  xml.SONoteType('NodeType'   => 'GIFTTO',
+                  xml.Notes('NodeType'   => 'GIFTTO',
                                  'NodeValue'  => @shipment.order.gift.to)
                   xml.Comments @shipment.order.gift.message
                 end

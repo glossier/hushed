@@ -48,10 +48,10 @@ module Hushed
           document = Nokogiri::XML::Document.parse(message.to_xml)
 
           assert_equal 'true', document.css('OrderHeader')[0]['Gift']
-          assert_equal "GIFTFROM", document.css('SONoteType')[0]['NodeType']
-          assert_equal "from", document.css('SONoteType')[0]['NodeValue']
-          assert_equal "GIFTTO", document.css('SONoteType')[1]['NodeType']
-          assert_equal "to", document.css('SONoteType')[1]['NodeValue']
+          assert_equal "GIFTFROM", document.css('Notes')[0]['NodeType']
+          assert_equal "from", document.css('Notes')[0]['NodeValue']
+          assert_equal "GIFTTO", document.css('Notes')[1]['NodeType']
+          assert_equal "to", document.css('Notes')[1]['NodeValue']
           assert_equal "HBD", document.css('Comments')[0].text
         end
 
