@@ -7,8 +7,11 @@ module Hushed
     module Request
       class ShipmentOrderSummary
         include Hushed::Documents::Document
+        extend Forwardable
 
         NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrderSummaryRequest.xsd"
+
+        def_delegators :@client, :warehouse, :business_unit, :client_id
 
         def initialize(options = {})
           @client   = options.fetch(:client)
