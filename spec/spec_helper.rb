@@ -334,10 +334,11 @@ class MessageDouble
 end
 
 class ClientDouble
-  attr_accessor :client_id, :business_unit
+  attr_accessor :client_id, :business_unit, :warehouse
 
   def initialize(options = {})
     @client_id = options[:client_id]
     @business_unit = options[:business_unit]
+    @warehouse = options[:warehouse]
   end
 end

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ShipmentOrderSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ClientId="CLIENT" BusinessUnit="BUSINESS" FromDate="1976-03-10T05:00:00Z" ToDate="1992-12-15T05:00:00Z" Warehouse="WAREHOUSE" xmlns="http://schemas.quietlogistics.com/V2/ShipmentOrderSummary.xsd">
+  <NewOrders>
+    <Order OrderNumber="H62003013021" EventDate="2016-11-17T17:29:33.25" />
+    <Order OrderNumber="H62003998980" EventDate="2016-11-17T17:29:33.457" />
+    <Order OrderNumber="H33333223344" EventDate="2016-11-17T17:29:33.677" />
+  </NewOrders>
+  <ShippedOrders>
+    <Order OrderNumber="H62003013038" EventDate="2016-11-17T12:30:46.957" />
+    <Order OrderNumber="H06854517788" EventDate="2016-11-17T12:31:01.897" />
+  </ShippedOrders>
+  <CancelledOrders>
+    <Order OrderNumber="H83538851711" EventDate="2016-11-17T17:39:16.91" />
+    <Order OrderNumber="H88136467703" EventDate="2016-11-17T17:39:36.31" />
+    <Order OrderNumber="H46688105645" EventDate="2016-11-18T12:08:44.397" />
+  </CancelledOrders>
+  <OpenOrders>
+    <Order OrderNumber="H00221376533" EventDate="2016-11-17T20:43:10" />
+    <Order OrderNumber="H00637058151" EventDate="2016-11-17T16:43:58" />
+    <Order OrderNumber="H01063766586" EventDate="2016-11-18T09:48:32" />
+  </OpenOrders>
+</ShipmentOrderSummary>
