@@ -12,8 +12,6 @@ module Hushed
 
         NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd"
 
-        DATEFORMAT = "%Y%m%d_%H%M%S"
-
         class MissingOrderError < StandardError; end
         class MissingClientError < StandardError; end
 

@@ -28,7 +28,7 @@ module Hushed
         end
 
         def filename
-          @filename ||= "#{business_unit}_ShipmentOrderSummary_#{date.strftime(DATEFORMAT)}.xml"
+          @filename ||= "#{business_unit}_ShipmentOrderSummary_#{Time.now.strftime(DATEFORMAT)}.xml"
         end
       end
     end
