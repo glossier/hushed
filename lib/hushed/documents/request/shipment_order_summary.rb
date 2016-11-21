@@ -27,8 +27,12 @@ module Hushed
           builder.to_xml
         end
 
+        def type
+          'ShipmentOrderSummary'
+        end
+
         def filename
-          @filename ||= "#{business_unit}_ShipmentOrderSummary_#{Time.now.strftime(DATEFORMAT)}.xml"
+          @filename ||= "#{business_unit}_#{type}_#{Time.now.strftime(DATEFORMAT)}.xml"
         end
       end
     end
