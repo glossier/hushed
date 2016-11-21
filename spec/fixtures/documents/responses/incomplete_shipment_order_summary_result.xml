@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ShipmentOrderSummary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ClientId="CLIENT" BusinessUnit="BUSINESS" FromDate="1976-03-10T05:00:00Z" ToDate="1992-12-15T05:00:00Z" Warehouse="WAREHOUSE" xmlns="http://schemas.quietlogistics.com/V2/ShipmentOrderSummary.xsd">
+  <NewOrders>
+    <Order OrderNumber="H62003013021" EventDate="2016-11-17T17:29:33.25" />
+    <Order OrderNumber="H62003998980" EventDate="2016-11-17T17:29:33.457" />
+    <Order OrderNumber="H33333223344" EventDate="2016-11-17T17:29:33.677" />
+  </NewOrders>
+  <ShippedOrders/>
+</ShipmentOrderSummary>

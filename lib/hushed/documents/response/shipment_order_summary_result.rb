@@ -47,7 +47,10 @@ module Hushed
         private
 
         def add_orders_status(statuses, node, status)
-          shipment_order_summary.css(node).first.css('Order').each { |o| statuses[o['OrderNumber']] = status }
+          status_node = shipment_order_summary.css(node)
+          return unless status_node.any?
+
+          status_node.first.css('Order').each { |o| statuses[o['OrderNumber']] = status }
         end
       end
     end
