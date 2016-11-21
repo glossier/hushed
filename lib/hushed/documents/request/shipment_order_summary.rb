@@ -31,8 +31,12 @@ module Hushed
           'ShipmentOrderSummary'
         end
 
+        def date
+          @date ||= Time.now
+        end
+
         def filename
-          @filename ||= "#{business_unit}_#{type}_#{Time.now.strftime(DATEFORMAT)}.xml"
+          @filename ||= "#{business_unit}_#{type}_#{date.strftime(DATEFORMAT)}.xml"
         end
       end
     end
