@@ -22,7 +22,7 @@ module Hushed
             xml.ShipmentOrderSummaryRequest('xmlns' => NAMESPACE,
                                             'ClientId' => @client.client_id,
                                             'BusinessUnit' => @client.business_unit,
-                                            'Warehouse' => @client.warehouse)
+                                            'Warehouse' => 'ALL')
           end
           builder.to_xml
         end
