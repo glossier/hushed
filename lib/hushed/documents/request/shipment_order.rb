@@ -108,7 +108,7 @@ module Hushed
         end
 
         def ship_address
-          @shipment.address
+          @shipment.order.ship_address
         end
 
         def bill_address
@@ -116,7 +116,7 @@ module Hushed
         end
 
         def full_name
-          @shipment.address.full_name
+          @shipment.order.ship_address.full_name
         end
 
         def message
