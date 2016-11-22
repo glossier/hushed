@@ -12,8 +12,6 @@ module Hushed
 
         NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd"
 
-        DATEFORMAT = "%Y%m%d_%H%M%S"
-
         class MissingOrderError < StandardError; end
         class MissingClientError < StandardError; end
 
@@ -110,7 +108,7 @@ module Hushed
         end
 
         def ship_address
-          @shipment.address
+          @shipment.order.ship_address
         end
 
         def bill_address
@@ -118,7 +116,7 @@ module Hushed
         end
 
         def full_name
-          @shipment.address.full_name
+          @shipment.order.ship_address.full_name
         end
 
         def message
@@ -144,11 +142,6 @@ module Hushed
         def filename
           "#{business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
         end
-
-        def message_id
-          SecureRandom.uuid
-        end
-
       end
     end
   end

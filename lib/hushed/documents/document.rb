@@ -10,6 +10,10 @@ module Hushed
       def filename
         @filename ||= "#{business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
       end
+
+      def message_id
+        SecureRandom.uuid
+      end
     end
   end
 end
