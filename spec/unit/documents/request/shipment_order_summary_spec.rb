@@ -19,7 +19,6 @@ module Hushed
           document.remove_namespaces!
           assert_equal "CLIENT", document.xpath("/ShipmentOrderSummaryRequest/@ClientId").first.value
           assert_equal "BUSINESS", document.xpath("/ShipmentOrderSummaryRequest/@BusinessUnit").first.value
-          assert_equal "ALL", document.xpath("/ShipmentOrderSummaryRequest/@Warehouse").first.value
         end
       end
     end

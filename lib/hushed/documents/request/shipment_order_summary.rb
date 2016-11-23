@@ -21,8 +21,7 @@ module Hushed
           builder = Nokogiri::XML::Builder.new do |xml|
             xml.ShipmentOrderSummaryRequest('xmlns' => NAMESPACE,
                                             'ClientId' => @client.client_id,
-                                            'BusinessUnit' => @client.business_unit,
-                                            'Warehouse' => 'ALL')
+                                            'BusinessUnit' => @client.business_unit)
           end
           builder.to_xml
         end
