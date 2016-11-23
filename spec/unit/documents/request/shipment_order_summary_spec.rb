@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'hushed/documents/request/shipment_order_summary'
+require 'hushed/documents/request/shipment_order_summary_request'
 
 module Hushed
   module Documents
@@ -10,7 +10,7 @@ module Hushed
         end
 
         it "should be able to generate an shipment order summary request xml document" do
-          message = ShipmentOrderSummary.new(client: @client)
+          message = ShipmentOrderSummaryRequest.new(client: @client)
           document = Nokogiri::XML(message.to_xml)
 
           expected_namespaces = {'xmlns' => 'http://schemas.quietlogistics.com/V2/ShipmentOrderSummaryRequest.xsd'}

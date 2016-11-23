@@ -1,7 +1,7 @@
 module Hushed
   module Documents
     module Response
-      class ShipmentOrderSummaryResult
+      class ShipmentOrderSummary
         attr_reader :io
 
         def initialize(options = {})

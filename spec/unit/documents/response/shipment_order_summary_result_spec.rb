@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'hushed/documents/response/shipment_order_summary_result'
+require 'hushed/documents/response/shipment_order_summary'
 
 module Hushed
   module Documents
@@ -8,8 +8,8 @@ module Hushed
         include Fixtures
 
         it "should be able to successfully parse a response document" do
-          document = load_response('shipment_order_summary_result')
-          order_summary_result = ShipmentOrderSummaryResult.new(io: document)
+          document = load_response('shipment_order_summary')
+          order_summary_result = ShipmentOrderSummary.new(io: document)
 
           assert_equal 'CLIENT', order_summary_result.client_id
           assert_equal 'BUSINESS', order_summary_result.business_unit
@@ -24,8 +24,8 @@ module Hushed
         end
 
         it "parses incomplete response document" do
-          document = load_response('incomplete_shipment_order_summary_result')
-          order_summary_result = ShipmentOrderSummaryResult.new(io: document)
+          document = load_response('incomplete_shipment_order_summary')
+          order_summary_result = ShipmentOrderSummary.new(io: document)
 
           assert_equal :new, order_summary_result.statuses['H62003013021']
         end

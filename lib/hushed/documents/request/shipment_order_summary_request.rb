@@ -5,7 +5,7 @@ require "hushed/black_tie_bundle"
 module Hushed
   module Documents
     module Request
-      class ShipmentOrderSummary
+      class ShipmentOrderSummaryRequest
         include Hushed::Documents::Document
         extend Forwardable
 

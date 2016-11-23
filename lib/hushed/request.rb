@@ -1,5 +1,5 @@
 require 'hushed/documents/request/shipment_order'
-require 'hushed/documents/request/shipment_order_summary'
+require 'hushed/documents/request/shipment_order_summary_request'
 
 module Hushed
   module Request

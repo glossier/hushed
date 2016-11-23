@@ -1,6 +1,6 @@
 require 'hushed/documents/response/shipment_order_result'
 require 'hushed/documents/response/inventory_summary_document'
-require 'hushed/documents/response/shipment_order_summary_result'
+require 'hushed/documents/response/shipment_order_summary'
 
 
 module Hushed
