@@ -166,6 +166,19 @@ module Hushed
         assert_empty @xsd.validate(document)
       end
 
+      it 'adds an item capture attribute for gift card' do
+        gift_card = ProductDouble.example(gift_card: true)
+        shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
+          InventoryUnitDouble.example(variant: VariantDouble.example(product: gift_card))
+        ])
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+        document = Nokogiri::XML::Document.parse(message.to_xml)
+
+        gift_card = document.css('OrderDetails').first
+        assert_equal 'true', gift_card['ItemIDCapture']
+      end
+
       private
 
         def assert_header(header)
@@ -186,6 +199,7 @@ module Hushed
           assert_equal "1", actual['QuantityToShip']
           assert_equal "EA", actual['UOM']
           assert_equal expected.variant.price, actual['Price']
+          assert_nil actual['ItemIDCapture']
         end
 
         def assert_address(email, address, node)
