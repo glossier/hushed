@@ -73,6 +73,7 @@ module Hushed
         def add_items_to_shipment_order(items, xml)
           item_hashes = convert_to_hashes(items)
           grouped_items = group_items_by_sku(item_hashes)
+
           grouped_items.each_with_index do |hash, index|
             hash['Line'] = index + 1
             xml.OrderDetails(hash)
@@ -87,11 +88,13 @@ module Hushed
         end
 
         def group_items_by_sku(item_hashes)
-          grouped = item_hashes.group_by {|hash| hash['ItemNumber'] }
-          grouped.values.map do |hashes|
+          giftcards_and_others =  item_hashes.partition { |hash| !!hash['ItemIDCapture'] }
+          others = giftcards_and_others[1].group_by {|hash| hash['ItemNumber'] }.values.map do |hashes|
             hash = hashes.first
             update_quantity(hash, hashes.length)
           end
+          giftcards = giftcards_and_others[0].map { |hash| update_quantity(hash, 1) }
+          others.concat(giftcards)
         end
 
         def update_quantity(hash, quantity)

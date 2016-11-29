@@ -179,6 +179,29 @@ module Hushed
         assert_equal 'true', gift_card['ItemIDCapture']
       end
 
+      it 'sends gift card as separate order details' do
+        gift_card = ProductDouble.example(gift_card: true)
+        shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
+          InventoryUnitDouble.example(variant: VariantDouble.example(product: gift_card, sku: 'GGFC-01-2500')),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'GML200')),
+          InventoryUnitDouble.example(variant: VariantDouble.example(product: gift_card, sku: 'GGFC-01-2500'))
+        ])
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+
+        order_details = order_details_from(message)
+        assert_equal 3, order_details.count
+        assert_equal 'GML200', order_details[0]['ItemNumber']
+        assert_equal "1", order_details[0]['QuantityOrdered']
+        assert_equal "1", order_details[0]['QuantityToShip']
+        assert_equal 'GGFC-01-2500', order_details[1]['ItemNumber']
+        assert_equal "1", order_details[1]['QuantityOrdered']
+        assert_equal "1", order_details[1]['QuantityToShip']
+        assert_equal 'GGFC-01-2500', order_details[1]['ItemNumber']
+        assert_equal "1", order_details[1]['QuantityOrdered']
+        assert_equal "1", order_details[1]['QuantityToShip']
+      end
+
       private
 
         def assert_header(header)
