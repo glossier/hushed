@@ -30,7 +30,7 @@ module Hushed
     end
 
     def black_tie_bundle
-      InventoryUnit.new(BUNDLE_SKU, 50.0)
+      InventoryUnit.new(BUNDLE_SKU, 50.0, false)
     end
 
     def contains_bundle?(inventory_units)

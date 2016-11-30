@@ -27,6 +27,25 @@ module Configuration
   end
 end
 
+class ProductDouble
+  DEFAULT_OPTIONS = {
+    gift_card: false
+  }
+
+  attr_reader :gift_card
+  def initialize(options = {})
+    @gift_card = options[:gift_card]
+  end
+
+  def gift_card?
+    gift_card
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+end
+
 class LineItemDouble
   DEFAULT_OPTIONS = {
     id: 123456,
@@ -41,7 +60,6 @@ class LineItemDouble
     @quantity = options[:quantity]
     @price = options[:price]
     @sku = options[:sku]
-    @product = options[:product]
   end
 
   def self.example(options = {})
@@ -53,14 +71,16 @@ class VariantDouble
   DEFAULT_OPTIONS = {
     id: 112233,
     sku: "ABC-123",
-    price: '6.95'
+    price: '6.95',
+    product: ProductDouble.example
   }
 
-  attr_reader :id, :sku, :price
+  attr_reader :id, :sku, :price, :product
   def initialize(options = {})
     @id = options[:id]
     @sku = options[:sku]
     @price = options[:price]
+    @product = options[:product]
   end
 
   def self.example(options = {})

@@ -3,11 +3,13 @@ module Hushed
     module Request
       module HashConverter
         def order_details(item)
-          {
+          details = {
             'ItemNumber'      => normalize_sku(item.variant.sku),
             'UOM'             => 'EA',
             'Price'           => item.variant.price
           }
+          details['ItemIDCapture'] = true if item.variant.product.gift_card?
+          details
         end
 
         def ship_to_hash
