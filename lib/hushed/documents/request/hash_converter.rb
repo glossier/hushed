@@ -1,10 +1,12 @@
+require 'hushed/sku'
+
 module Hushed
   module Documents
     module Request
       module HashConverter
         def order_details(item)
           details = {
-            'ItemNumber'      => normalize_sku(item.variant.sku),
+            'ItemNumber'      => Hushed::Sku.extract_and_normalize(item.variant),
             'UOM'             => 'EA',
             'Price'           => item.variant.price
           }
@@ -37,11 +39,6 @@ module Hushed
             'Country'    => bill_address.country.name
           }
         end
-
-        private
-          def normalize_sku(sku)
-            sku.chomp("-SET")
-          end
       end
     end
   end

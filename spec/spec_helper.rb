@@ -27,6 +27,23 @@ module Configuration
   end
 end
 
+class VirtualGiftCardDouble
+  DEFAULT_OPTIONS = {
+    recipient_name: 'John',
+    purchaser_name: 'Jane'
+  }
+
+  attr_reader :recipient_name, :purchaser_name
+  def initialize(options = {})
+    @recipient_name = options[:recipient_name]
+    @purchaser_name = options[:purchaser_name]
+  end
+
+  def self.example(options = {})
+    self.new(DEFAULT_OPTIONS.merge(options))
+  end
+end
+
 class ProductDouble
   DEFAULT_OPTIONS = {
     gift_card: false
@@ -52,14 +69,16 @@ class LineItemDouble
     quantity: 1,
     price: '12.95',
     sku: "ABC-123",
+    gift_cards: []
   }
 
-  attr_reader :id, :quantity, :price, :sku, :product
+  attr_reader :id, :quantity, :price, :sku, :product, :gift_cards
   def initialize(options = {})
     @id = options[:id]
     @quantity = options[:quantity]
     @price = options[:price]
     @sku = options[:sku]
+    @gift_cards = options[:gift_cards]
   end
 
   def self.example(options = {})
@@ -252,10 +271,10 @@ class OrderDouble
     gift: GiftDouble.example
   }
 
-  attr_reader :line_items, :ship_address, :bill_address, :note, :email
-  attr_reader :total_price, :email, :id, :type, :created_at, :shipping_lines
-  attr_reader :number
-  attr_reader :gift
+  attr_reader :line_items, :ship_address, :bill_address, :note, :email,
+   :total_price, :email, :id, :created_at, :shipping_lines, :number, :gift
+  alias_method :shipping_address, :ship_address
+  alias_method :billing_address, :bill_address
 
   def initialize(options = {})
     @line_items = options[:line_items]
@@ -275,20 +294,12 @@ class OrderDouble
     self.new(DEFAULT_OPTIONS.merge(options))
   end
 
-  def special_instructions
-    @note
-  end
-
-  def shipping_address
-    @ship_address
-  end
-
-  def billing_address
-    @bill_address
-  end
-
   def type
-    @type || "SO"
+    @type || 'SO'
+  end
+
+  def gift_cards
+    line_items.map(&:gift_cards).flatten
   end
 end
 
