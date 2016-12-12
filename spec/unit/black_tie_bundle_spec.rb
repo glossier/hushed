@@ -22,6 +22,15 @@ module Hushed
       assert_equal item_skus.sort, ['ABC-123', 'GHOL-16-1001', 'GHOL-16-1001']
     end
 
+    it "needs all part to create a bundle" do
+      items = BlackTieBundle.convert([pencil_individual, pencil_individual, pencil_individual, pencil_individual,
+                                      pencil, nail_polish, haloscope, lip_gloss,
+                                      other])
+
+      item_skus = items.map { |item| item.variant.sku }
+      assert_equal item_skus.sort, ['ABC-123', 'GEYE-01-WIP1-SET', 'GEYE-01-WIP1-SET', 'GEYE-01-WIP1-SET', 'GEYE-01-WIP1-SET', 'GHOL-16-1001']
+    end
+
     it "returns the list of items if it doesn't contain a black tie set" do
       items = [other, other]
       converted_items = BlackTieBundle.convert(items)
@@ -29,6 +38,13 @@ module Hushed
       items.each do |item|
         assert_includes converted_items, item
       end
+    end
+
+    def pencil_individual
+      InventoryUnitDouble.example(
+        variant: VariantDouble.example(sku: "GEYE-01-WIP1-SET"),
+        line_item: LineItemDouble.example(sku: "GEYE-01-WIP1-SET")
+      )
     end
 
     def pencil
