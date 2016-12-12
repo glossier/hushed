@@ -76,8 +76,23 @@ module Hushed
 
           grouped_items.each_with_index do |hash, index|
             hash['Line'] = index + 1
-            xml.OrderDetails(hash)
+            xml.OrderDetails(hash) {
+              gift_card = gift_card_for(hash['ItemNumber'], items)
+              add_gift_card_info(gift_card, xml) if gift_card
+            }
           end
+        end
+
+        def gift_card_for(sku, items)
+          item = items.find{ |item| Hushed::Sku.extract_and_normalize(item.variant) == sku }
+          return if item.nil? || item.line_item.nil?
+          item.line_item.gift_cards.first
+        end
+
+        def add_gift_card_info(gift_card, xml)
+          service = "FROM: #{gift_card.purchaser_name} TO: #{gift_card.recipient_name}"
+          xml.ValueAddedService('Service'     => service,
+                                'ServiceType' => 'GIFTCARD')
         end
 
         def convert_to_hashes(items)

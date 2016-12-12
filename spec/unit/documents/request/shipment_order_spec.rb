@@ -202,6 +202,24 @@ module Hushed
         assert_equal "1", order_details[1]['QuantityToShip']
       end
 
+      it 'includes the recipient and purchaser names in the request' do
+        gift_card = LineItemDouble.example(gift_cards: [
+          VirtualGiftCardDouble.example(purchaser_name: 'Tarzan', recipient_name: 'Jane')
+        ])
+        shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'GML200')),
+          InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'GC-50'), line_item: gift_card)
+        ])
+
+        message = ShipmentOrder.new(shipment: shipment, client: @client)
+        document = Nokogiri::XML(message.to_xml).remove_namespaces!
+
+        gift_card_info = document.xpath('/ShipOrderDocument/OrderDetails[2]/ValueAddedService').first
+        refute_nil gift_card_info
+        assert_equal 'GIFTCARD', gift_card_info['ServiceType']
+        assert_equal 'FROM: Tarzan TO: Jane', gift_card_info['Service']
+      end
+
       private
 
         def assert_header(header)
