@@ -5,6 +5,7 @@ module Hushed
     extend self
 
     BUNDLE_SKU = "GHOL-16-1001"
+    PARTS = ["GLIP-01-WIP1", "GHS0-03-WIP1", "GNP0-01-WIP1", "GEYE-01-WIP1"]
     NUMBER_OF_PARTS = 4;
 
     def convert(inventory_units)
@@ -26,7 +27,7 @@ module Hushed
 
     def part_of_bundle(inventory_unit)
       return false if is_a_bundle?(inventory_unit)
-      inventory_unit.line_item.sku == BUNDLE_SKU
+      PARTS.include?(Hushed::Sku.extract_and_normalize(inventory_unit.variant))
     end
 
     def black_tie_bundle
