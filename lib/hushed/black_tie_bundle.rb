@@ -27,7 +27,8 @@ module Hushed
 
     def part_of_bundle(inventory_unit)
       return false if is_a_bundle?(inventory_unit)
-      ["GHOL-16-1001", "phase1bts"].include?(inventory_unit.line_item.sku)
+      ["GHOL-16-1001", "phase1bts"].include?(inventory_unit.line_item.sku) &&
+        PARTS.include?(Hushed::Sku.extract_and_normalize(inventory_unit.variant))
     end
 
     def black_tie_bundle
@@ -39,7 +40,7 @@ module Hushed
     end
 
     def is_a_bundle?(inventory_unit)
-      ["GHOL-16-1001", "phase1bts"].include?(inventory_unit.variant.sku)
+      inventory_unit.variant.sku == BUNDLE_SKU
     end
   end
 end
