@@ -43,8 +43,8 @@ module Hushed
                   xml.Comments @shipment.order.gift.message
                 end
 
-                xml.ShipMode('Carrier'      => @shipment.shipping_method.carrier,
-                             'ServiceLevel' => @shipment.shipping_method.service_level)
+                xml.ShipMode('Carrier'      => @shipment.carrier,
+                             'ServiceLevel' => @shipment.service_level)
 
                 xml.ShipTo(ship_to_hash)
                 xml.BillTo(bill_to_hash)
