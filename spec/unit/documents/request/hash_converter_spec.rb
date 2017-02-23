@@ -19,13 +19,6 @@ module Hushed
           assert_equal "EA", hash['UOM']
           assert_equal 9.95, hash['Price']
         end
-
-        it "strip the postfix '-SET' from the sku" do
-          item = InventoryUnitDouble.example(variant: VariantDouble.example(sku: "ABC-SET"))
-
-          assert_equal "ABC", order_details(item)['ItemNumber']
-        end
-
       end
     end
   end
