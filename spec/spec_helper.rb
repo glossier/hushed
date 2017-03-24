@@ -231,11 +231,14 @@ class GiftDouble
     @from = options[:from]
     @to = options[:to]
     @message = options[:message]
+    @active = options[:active]
   end
 
   def self.example(options = {})
     self.new(DEFAULT_OPTIONS.merge(options))
   end
+
+  def active?; !!@active; end
 end
 
 class OrderDouble
@@ -305,7 +308,7 @@ class ShipmentDouble
     service_level: "GROUND"
   }
 
-  attr_reader :order, :number, :shipping_method, :inventory_units_to_fulfill, :created_at, :value_added_services
+  attr_reader :order, :number, :shipping_method, :inventory_units_to_fulfill, :created_at, :value_added_services, :carrier, :service_level
 
   def initialize(options = {})
     @order = options[:order]
