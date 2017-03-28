@@ -35,7 +35,7 @@ module Hushed
               xml.OrderHeader('OrderNumber' => @shipment_number,
                               'OrderType'   => order_type,
                               'OrderDate'   => @shipment.created_at.utc.iso8601,
-                              'Gift'        => !!@shipment.order.gift) {
+                              'Gift'        => has_gift_message?) {
 
                 xml.Extension @shipment.order.number
 
