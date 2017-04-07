@@ -4,7 +4,7 @@ module Hushed
       module HashConverter
         def order_details(item)
           details = {
-            'ItemNumber'      => item.variant.current_warehouse_sku,
+            'ItemNumber'      => normalize_sku(item.variant.current_warehouse_sku),
             'UOM'             => 'EA',
             'Price'           => item.variant.price
           }
@@ -36,6 +36,12 @@ module Hushed
             'PostalCode' => bill_address.zipcode,
             'Country'    => bill_address.country.name
           }
+        end
+
+        private
+
+        def normalize_sku(sku)
+          sku.sub('-SET', '')
         end
       end
     end
