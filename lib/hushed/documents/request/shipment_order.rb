@@ -35,7 +35,7 @@ module Hushed
               xml.OrderHeader('OrderNumber' => @shipment_number,
                               'OrderType'   => order_type,
                               'OrderDate'   => @shipment.created_at.utc.iso8601,
-                              'Gift'        => !!@shipment.order.gift) {
+                              'Gift'        => has_gift_message?) {
 
                 xml.Extension @shipment.order.number
 
@@ -43,17 +43,20 @@ module Hushed
                   xml.Comments @shipment.order.gift.message
                 end
 
-                xml.ShipMode('Carrier'      => @shipment.shipping_method.carrier,
-                             'ServiceLevel' => @shipment.shipping_method.service_level)
+                carrier       = @shipment.carrier || @shipment.shipping_method.carrier
+                service_level = @shipment.service_level || @shipment.shipping_method.service_level
+
+                xml.ShipMode('Carrier'      => carrier,
+                             'ServiceLevel' => service_level)
 
                 xml.ShipTo(ship_to_hash)
                 xml.BillTo(bill_to_hash)
 
-                if @shipment.order.gift
+                if has_gift_message?
                   xml.Notes('NoteType'   => 'GIFTFROM',
-                                 'NoteValue'  => @shipment.order.gift.from)
+                                 'NoteValue'  => gift.from)
                   xml.Notes('NoteType'   => 'GIFTTO',
-                                 'NoteValue'  => @shipment.order.gift.to)
+                                 'NoteValue'  => gift.to)
                 end
 
                 if @shipment.respond_to?(:value_added_services)
@@ -159,6 +162,14 @@ module Hushed
 
         def filename
           "#{business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
+        end
+
+        def has_gift_message?
+          gift && gift.active?
+        end
+
+        def gift
+          @gift ||= shipment.order.gift
         end
       end
     end

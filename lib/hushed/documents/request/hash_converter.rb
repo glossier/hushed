@@ -6,7 +6,7 @@ module Hushed
       module HashConverter
         def order_details(item)
           details = {
-            'ItemNumber'      => Hushed::Sku.extract_and_normalize(item.variant),
+            'ItemNumber'      => item.variant.current_warehouse_sku,
             'UOM'             => 'EA',
             'Price'           => item.variant.price
           }
