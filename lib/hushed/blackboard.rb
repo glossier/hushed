@@ -12,9 +12,9 @@ module Hushed
 
     def post(document)
       bucket = client.to_quiet_bucket
-      if bucket.objects[document.filename].write(document.to_xml)
-        Message.new(:client => @client, :document => document)
-      end
+      return unless bucket.objects[document.filename].write(document.to_xml)
+
+      Message.new(client: @client, document: document)
     end
 
     def fetch(message)
@@ -36,11 +36,12 @@ module Hushed
 
     def build_document(type, contents)
       namespace = if Response.valid_type?(type)
-        Documents::Response
-      elsif Request.valid_type?(type)
-        Documents::Request
-      end
-      namespace.const_get(type).new(:io => contents) if namespace
+                    Documents::Response
+                  elsif Request.valid_type?(type)
+                    Documents::Request
+                  end
+
+      namespace.const_get(type).new(io: contents) if namespace
     end
 
     def retrieve_latest(document_name_prefix)
@@ -84,7 +85,5 @@ module Hushed
     def get_inventory_summary_date(file_name)
       file_name.slice(26..31)
     end
-
-
   end
 end

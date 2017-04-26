@@ -4,10 +4,10 @@ require 'hushed/documents/response/shipment_order_summary'
 module Hushed
   module Documents
     module Response
-      describe "ShipmentOrderResult" do
+      describe 'ShipmentOrderResult' do
         include Fixtures
 
-        it "should be able to successfully parse a response document" do
+        it 'should be able to successfully parse a response document' do
           document = load_response('shipment_order_summary')
           order_summary_result = ShipmentOrderSummary.new(io: document)
 
@@ -23,7 +23,7 @@ module Hushed
           assert_equal :open, order_summary_result.statuses['H00221376533']
         end
 
-        it "parses incomplete response document" do
+        it 'parses incomplete response document' do
           document = load_response('incomplete_shipment_order_summary')
           order_summary_result = ShipmentOrderSummary.new(io: document)
 

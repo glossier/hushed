@@ -22,8 +22,8 @@ end
 module Configuration
   def load_configuration
     test_credentials_file = ENV['HOME'] + '/.hushed/credentials.yml'
-    test_credentials_file = "spec/fixtures/credentials.yml" unless File.exists?(test_credentials_file)
-    YAML.load(File.open(test_credentials_file, 'rb'))
+    test_credentials_file = 'spec/fixtures/credentials.yml' unless File.exist?(test_credentials_file)
+    YAML.safe_load(File.open(test_credentials_file, 'rb'))
   end
 end
 
@@ -31,7 +31,7 @@ class VirtualGiftCardDouble
   DEFAULT_OPTIONS = {
     recipient_name: 'John',
     purchaser_name: 'Jane'
-  }
+  }.freeze
 
   attr_reader :recipient_name, :purchaser_name
   def initialize(options = {})
@@ -40,14 +40,14 @@ class VirtualGiftCardDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
 class ProductDouble
   DEFAULT_OPTIONS = {
     gift_card: false
-  }
+  }.freeze
 
   attr_reader :gift_card
   def initialize(options = {})
@@ -59,18 +59,18 @@ class ProductDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
 class LineItemDouble
   DEFAULT_OPTIONS = {
-    id: 123456,
+    id: 123_456,
     quantity: 1,
     price: '12.95',
-    sku: "ABC-123",
+    sku: 'ABC-123',
     gift_cards: []
-  }
+  }.freeze
 
   attr_reader :id, :quantity, :price, :sku, :product, :gift_cards
   def initialize(options = {})
@@ -82,17 +82,17 @@ class LineItemDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
 class VariantDouble
   DEFAULT_OPTIONS = {
-    id: 112233,
-    sku: "ABC-123",
+    id: 112_233,
+    sku: 'ABC-123',
     price: '6.95',
     product: ProductDouble.example
-  }
+  }.freeze
 
   attr_reader :id, :sku, :price, :product
   def initialize(options = {})
@@ -103,16 +103,16 @@ class VariantDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
 class InventoryUnitDouble
   DEFAULT_OPTIONS = {
-    id: 123456,
+    id: 123_456,
     variant: VariantDouble.example,
     line_item: LineItemDouble.example
-  }
+  }.freeze
 
   attr_reader :id, :line_item, :variant
   def initialize(options = {})
@@ -122,16 +122,16 @@ class InventoryUnitDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
 class StateDouble
   DEFAULT_OPTIONS = {
-    iso_name: "CANADA",
-    name: "Ontario",
-    abbr: "ON",
-  }
+    iso_name: 'CANADA',
+    name: 'Ontario',
+    abbr: 'ON'
+  }.freeze
 
   attr_reader :name
 
@@ -140,16 +140,16 @@ class StateDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
 class CountryDouble
   DEFAULT_OPTIONS = {
-    iso_name: "CANADA",
-    name: "Canada",
-    iso: "CA"
-  }
+    iso_name: 'CANADA',
+    name: 'Canada',
+    iso: 'CA'
+  }.freeze
 
   attr_reader :name
 
@@ -158,9 +158,8 @@ class CountryDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
-
 end
 
 class AddressDouble
@@ -173,7 +172,7 @@ class AddressDouble
     country: CountryDouble.example,
     state: StateDouble.example,
     zipcode: 'K1N 5T5'
-  }
+  }.freeze
 
   attr_reader :company, :name, :address1, :address2, :city, :country, :state, :zipcode
 
@@ -193,7 +192,7 @@ class AddressDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
@@ -213,12 +212,12 @@ end
 
 class ShippingMethodDouble
   DEFAULT_OPTIONS = {
-    name: "UPS Ground",
-    admin_name: "fed001",
-    code: "fedex",
-    carrier: "FEDEX",
-    service_level: "GROUND"
-  }
+    name: 'UPS Ground',
+    admin_name: 'fed001',
+    code: 'fedex',
+    carrier: 'FEDEX',
+    service_level: 'GROUND'
+  }.freeze
 
   attr_reader :name, :admin_name, :code, :carrier, :service_level
 
@@ -231,7 +230,7 @@ class ShippingMethodDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
@@ -239,10 +238,10 @@ class GiftDouble
   DEFAULT_OPTIONS = {
     id: 1,
     active: true,
-    from: "from",
-    to: "to",
-    message: "HBD"
-  }
+    from: 'from',
+    to: 'to',
+    message: 'HBD'
+  }.freeze
 
   attr_reader :from, :to, :message
 
@@ -254,10 +253,12 @@ class GiftDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 
-  def active?; !!@active; end
+  def active?
+    !@active.nil?
+  end
 end
 
 class OrderDouble
@@ -267,17 +268,17 @@ class OrderDouble
     ship_address: AddressDouble.example,
     bill_address: AddressDouble.example,
     note: 'Happy Birthday',
-    created_at: Time.new(2013, 04, 05, 12, 30, 00),
-    id: 123456,
+    created_at: Time.new(2013, 0o4, 0o5, 12, 30, 0o0),
+    id: 123_456,
     email: 'john@smith.com',
     total_price: '123.45',
     gift: GiftDouble.example
-  }
+  }.freeze
 
   attr_reader :line_items, :ship_address, :bill_address, :note, :email,
-   :total_price, :email, :id, :created_at, :shipping_lines, :number, :gift
-  alias_method :shipping_address, :ship_address
-  alias_method :billing_address, :bill_address
+              :total_price, :email, :id, :created_at, :shipping_lines, :number, :gift
+  alias shipping_address ship_address
+  alias billing_address bill_address
 
   def initialize(options = {})
     @line_items = options[:line_items]
@@ -294,7 +295,7 @@ class OrderDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 
   def type
@@ -312,12 +313,12 @@ class ShipmentDouble
     number: "H#{rand.to_s[2..11]}",
     order: OrderDouble.example,
     inventory_units_to_fulfill: [InventoryUnitDouble.example],
-    state: "pending",
-    created_at: Time.new(2013, 04, 06, 13, 45, 00),
+    state: 'pending',
+    created_at: Time.new(2013, 0o4, 0o6, 13, 45, 0o0),
     value_added_services: [],
-    carrier: "FEDEX",
-    service_level: "GROUND"
-  }
+    carrier: 'FEDEX',
+    service_level: 'GROUND'
+  }.freeze
 
   attr_reader :order, :number, :shipping_method, :inventory_units_to_fulfill, :created_at, :value_added_services, :carrier, :service_level
 
@@ -333,7 +334,7 @@ class ShipmentDouble
   end
 
   def self.example(options = {})
-    self.new(DEFAULT_OPTIONS.merge(options))
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
@@ -344,7 +345,7 @@ class DocumentDouble
 
   def initialize(options = {})
     options.each do |key, value|
-      self.public_send("#{key}=".to_sym, value)
+      public_send("#{key}=".to_sym, value)
     end
   end
 
@@ -355,9 +356,7 @@ class DocumentDouble
     builder.to_xml
   end
 
-  def filename=(filename)
-    @filename = filename
-  end
+  attr_writer :filename
 end
 
 class MessageDouble

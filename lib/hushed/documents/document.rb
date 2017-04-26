@@ -1,10 +1,10 @@
 module Hushed
   module Documents
-    module  Document
-      DATEFORMAT = "%Y%m%d_%H%M%S"
+    module Document
+      DATEFORMAT = '%Y%m%d_%H%M%S'.freeze
 
       def to_xml
-        raise NotImplementedError("To be implemented by subclasses")
+        raise NotImplementedError('To be implemented by subclasses')
       end
 
       def filename

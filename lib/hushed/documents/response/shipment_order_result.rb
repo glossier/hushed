@@ -49,7 +49,6 @@ module Hushed
         def carton
           @carton ||= @document.css('Carton').first
         end
-
       end
     end
   end

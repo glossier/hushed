@@ -4,25 +4,25 @@ require 'hushed'
 require 'hushed/message'
 
 module Hushed
-  describe "QueueRemote" do
+  describe 'QueueRemote' do
     include Configuration
 
     before do
-      AWS.config(:stub_requests => false)
+      AWS.config(stub_requests: false)
       @client = Client.new(load_configuration)
       @sqs_queues = [@client.to_quiet_queue, @client.from_quiet_queue]
       @default_wait_time = @sqs_queues.map(&:wait_time_seconds).max
       @sqs_queues.each { |queue| queue.wait_time_seconds = 1 }
 
       @document = DocumentDouble.new(
-        :message_id => '1234567',
-        :date => Time.new(2013, 04, 05, 12, 30, 15).utc,
-        :filename => 'neat_beans.xml',
-        :client => @client,
-        :type => 'Thinger'
+        message_id: '1234567',
+        date: Time.new(2013, 0o4, 0o5, 12, 30, 15).utc,
+        filename: 'neat_beans.xml',
+        client: @client,
+        type: 'Thinger'
       )
 
-      @message = Message.new(:client => @client, :document => @document)
+      @message = Message.new(client: @client, document: @document)
       @queue = Queue.new(@client)
     end
 
@@ -33,7 +33,7 @@ module Hushed
       @sqs_queues.each { |queue| queue.wait_time_seconds = @default_wait_time }
     end
 
-    it "should be able to push a message onto the queue" do
+    it 'should be able to push a message onto the queue' do
       expected_md5 = OpenSSL::Digest::MD5.new.hexdigest(@message.to_xml)
       sent_message = @queue.send(@message)
       # NOTE: This is failing, but the message is getting sent
@@ -41,7 +41,7 @@ module Hushed
       assert_equal expected_md5, sent_message.md5
     end
 
-    it "should be able to fetch a message from the queue" do
+    it 'should be able to fetch a message from the queue' do
       @client.from_quiet_queue.send_message(@message.to_xml)
       message = @queue.receive
 
@@ -50,6 +50,7 @@ module Hushed
     end
 
     private
+
     def flush(queue)
       pending_messages = queue.approximate_number_of_messages
       while pending_messages > 0
@@ -59,6 +60,5 @@ module Hushed
         end
       end
     end
-
   end
 end

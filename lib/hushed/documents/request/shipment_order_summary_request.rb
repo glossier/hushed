@@ -1,6 +1,6 @@
-require "forwardable"
-require "hushed/documents/request/hash_converter"
-require "hushed/black_tie_bundle"
+require 'forwardable'
+require 'hushed/documents/request/hash_converter'
+require 'hushed/black_tie_bundle'
 
 module Hushed
   module Documents
@@ -9,12 +9,12 @@ module Hushed
         include Hushed::Documents::Document
         extend Forwardable
 
-        NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrderSummaryRequest.xsd"
+        NAMESPACE = 'http://schemas.quietlogistics.com/V2/ShipmentOrderSummaryRequest.xsd'.freeze
 
         def_delegators :@client, :warehouse, :business_unit, :client_id
 
         def initialize(options = {})
-          @client   = options.fetch(:client)
+          @client = options.fetch(:client)
         end
 
         def to_xml

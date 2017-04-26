@@ -2,16 +2,16 @@ require 'hushed/inventory_unit'
 
 module Hushed
   module BlackTieBundle
-    extend self
+    module_function
 
-    BUNDLE_SKU = "GHOL-16-1001"
-    PARTS = ["GLIP-01-WIP1", "GHS0-03-WIP1", "GNP0-01-WIP1", "GEYE-01-WIP1"]
-    NUMBER_OF_PARTS = 4;
+    BUNDLE_SKU = 'GHOL-16-1001'.freeze
+    PARTS = ['GLIP-01-WIP1', 'GHS0-03-WIP1', 'GNP0-01-WIP1', 'GEYE-01-WIP1'].freeze
+    NUMBER_OF_PARTS = 4
 
     def convert(inventory_units)
       return inventory_units unless contains_bundle?(inventory_units)
 
-      quantity_of_bundles_to_add = number_of_bundles(inventory_units);
+      quantity_of_bundles_to_add = number_of_bundles(inventory_units)
       converted_units = inventory_units.reject { |unit| part_of_bundle(unit) }
       quantity_of_bundles_to_add.times do
         converted_units << black_tie_bundle
@@ -26,8 +26,8 @@ module Hushed
     end
 
     def part_of_bundle(inventory_unit)
-      return false if is_a_bundle?(inventory_unit)
-      ["GHOL-16-1001", "phase1bts"].include?(inventory_unit.line_item.sku) &&
+      return false if bundle?(inventory_unit)
+      ['GHOL-16-1001', 'phase1bts'].include?(inventory_unit.line_item.sku) &&
         PARTS.include?(Hushed::Sku.extract_and_normalize(inventory_unit.variant))
     end
 
@@ -39,7 +39,7 @@ module Hushed
       inventory_units.any? { |unit| part_of_bundle(unit) }
     end
 
-    def is_a_bundle?(inventory_unit)
+    def bundle?(inventory_unit)
       inventory_unit.variant.sku == BUNDLE_SKU
     end
   end

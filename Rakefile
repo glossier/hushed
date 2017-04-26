@@ -1,9 +1,14 @@
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'rubocop/rake_task'
+
+RuboCop::RakeTask.new
 
 Rake::TestTask.new do |t|
-  t.libs = ['lib', 'spec']
+  t.libs = %w[lib spec]
   t.ruby_opts << '-rubygems'
   t.verbose = true
   t.test_files = FileList['spec/**/*_spec.rb']
 end
+
+task(default: %i[rubocop test])

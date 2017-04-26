@@ -5,7 +5,6 @@ require 'active_support/core_ext/hash/indifferent_access'
 
 module Hushed
   class Client
-
     class InitializationError < StandardError; end
     class InvalidBucketError < StandardError; end
     class InvalidQueueError < StandardError; end
@@ -44,6 +43,7 @@ module Hushed
     end
 
     private
+
     def sqs_client
       @sqs_client ||= AWS::SQS.new(@credentials)
     end
@@ -54,39 +54,39 @@ module Hushed
 
     def fetch_bucket(name)
       bucket = s3_client.buckets[name]
-      raise(InvalidBucketError.new("#{name} is not a valid bucket")) unless bucket.exists?
+      raise InvalidBucketError, "#{name} is not a valid bucket" unless bucket.exists?
       bucket
     end
 
     def fetch_queue(url)
       queue = sqs_client.queues[url]
-      raise(InvalidQueueError.new("#{url} is not a valid queue")) unless queue.exists?
+      raise InvalidQueueError, "#{url} is not a valid queue" unless queue.exists?
       queue
     end
 
     def verify!
-      raise(InitializationError.new("Credentials cannot be missing")) unless all_credentials?
-      raise(InitializationError.new("Both to and from buckets need to be set")) unless all_buckets?
-      raise(InitializationError.new("To, From and Inventory queues need to be set")) unless all_queues?
-      raise(InitializationError.new("client_id needs to be set")) unless @client_id
-      raise(InitializationError.new("business_unit needs to be set")) unless @business_unit
-      raise(InitializationError.new("warehouse needs to be set")) unless @warehouse
+      raise InitializationError, 'Credentials cannot be missing' unless all_credentials?
+      raise InitializationError, 'Both to and from buckets need to be set' unless all_buckets?
+      raise InitializationError, 'To, From and Inventory queues need to be set' unless all_queues?
+      raise InitializationError, 'client_id needs to be set' unless @client_id
+      raise InitializationError, 'business_unit needs to be set' unless @business_unit
+      raise InitializationError, 'warehouse needs to be set' unless @warehouse
     end
 
     def all_credentials?
-      has_keys?(@credentials, [:access_key_id, :secret_access_key])
+      keys?(@credentials, %i[access_key_id secret_access_key])
     end
 
     def all_buckets?
-      has_keys?(@buckets, [:from, :to])
+      keys?(@buckets, %i[from to])
     end
 
     def all_queues?
-      has_keys?(@queues, [:from, :to, :inventory])
+      keys?(@queues, %i[from to inventory])
     end
 
-    def has_keys?(hash, keys)
-      keys.reduce(hash) {|result, key| result && hash[key]}
+    def keys?(hash, keys)
+      keys.reduce(hash) { |result, key| result && hash[key] }
     end
   end
 end

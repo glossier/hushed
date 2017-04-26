@@ -1,8 +1,8 @@
-require "nokogiri"
-require "hushed/documents/document"
-require "hushed/version"
-require "hushed/client"
-require "hushed/blackboard"
-require "hushed/queue"
-require "hushed/message"
-require "hushed/error_message"
+require 'nokogiri'
+require 'hushed/documents/document'
+require 'hushed/version'
+require 'hushed/client'
+require 'hushed/blackboard'
+require 'hushed/queue'
+require 'hushed/message'
+require 'hushed/error_message'
