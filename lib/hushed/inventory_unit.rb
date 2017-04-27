@@ -9,8 +9,6 @@ module Hushed
     end
   end
 
-  private_constant :Variant, :Product
-
   Variant = Struct.new(:sku, :price, :product)
 
   class Product
@@ -24,4 +22,6 @@ module Hushed
       gift_card
     end
   end
+
+  private_constant :Variant, :Product
 end
