@@ -5,6 +5,10 @@ require 'mocha/setup'
 require 'hushed'
 require 'pry'
 
+require 'minitest/reporters'
+
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(color: true)]
+
 module Fixtures
   def load_fixture(path)
     File.open(path, 'rb').read

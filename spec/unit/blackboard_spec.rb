@@ -64,7 +64,7 @@ module Hushed
     end
 
     it 'should return nil if the type was not valid' do
-      assert_equal nil, @blackboard.build_document('ThingerRequest', 'thinger')
+      assert_nil @blackboard.build_document('ThingerRequest', 'thinger')
     end
 
     it 'should be possible to fetch a document from the blackboard' do

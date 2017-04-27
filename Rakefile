@@ -7,7 +7,7 @@ RuboCop::RakeTask.new
 Rake::TestTask.new do |t|
   t.libs = %w[lib spec]
   t.ruby_opts << '-rubygems'
-  t.verbose = true
+  t.warning = false
   t.test_files = FileList['spec/**/*_spec.rb']
 end
 
