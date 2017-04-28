@@ -15,7 +15,7 @@ module Hushed
       end
 
       def test_it_should_be_initializable_with_a_hash
-        @object.class.new(thinger: 123)
+        @object.class.new(type: 'Thinger')
       rescue TypeError
         flunk "It should be possible to initialize #{@object.class} with an args hash"
       end

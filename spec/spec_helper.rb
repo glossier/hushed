@@ -99,6 +99,9 @@ class VariantDouble
   }.freeze
 
   attr_reader :id, :sku, :price, :product
+
+  alias current_warehouse_sku sku
+
   def initialize(options = {})
     @id = options[:id]
     @sku = options[:sku]

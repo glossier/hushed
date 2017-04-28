@@ -116,19 +116,6 @@ module Hushed
           assert_equal '3', order_details[0]['QuantityToShip']
         end
 
-        it 'strips the -set postfix from the SKUS' do
-          shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
-                                              InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'ABC-SET')),
-                                              InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'DEF'))
-                                            ])
-
-          message = ShipmentOrder.new(shipment: shipment, client: @client)
-
-          order_details = order_details_from(message)
-          assert_equal 'ABC', order_details[0]['ItemNumber']
-          assert_equal 'DEF', order_details[1]['ItemNumber']
-        end
-
         it 'merges the black tie parts into one bundle' do
           bundle = LineItemDouble.example(sku: 'GHOL-16-1001')
           shipment = ShipmentDouble.example(inventory_units_to_fulfill: [

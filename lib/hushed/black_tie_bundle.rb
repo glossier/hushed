@@ -19,8 +19,6 @@ module Hushed
       converted_units
     end
 
-    private
-
     def number_of_bundles(inventory_units)
       inventory_units.find_all { |unit| part_of_bundle(unit) }.length / NUMBER_OF_PARTS
     end

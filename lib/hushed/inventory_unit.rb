@@ -9,7 +9,17 @@ module Hushed
     end
   end
 
-  Variant = Struct.new(:sku, :price, :product)
+  class Variant
+    attr_reader :sku, :price, :product
+
+    def initialize(sku, price, product)
+      @sku = sku
+      @price = price
+      @product = product
+    end
+
+    alias current_warehouse_sku sku
+  end
 
   class Product
     attr_reader :gift_card

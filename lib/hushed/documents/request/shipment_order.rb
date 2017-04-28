@@ -164,7 +164,7 @@ module Hushed
         end
 
         def gift_message?
-          gift && gift.active?
+          !gift.nil? && gift.active?
         end
 
         def gift
