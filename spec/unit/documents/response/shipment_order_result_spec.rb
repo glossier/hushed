@@ -14,7 +14,7 @@ module Hushed
           assert_equal 'HUSHED', order_result.client_id
           assert_equal 'HUSHED', order_result.business_unit
           assert_equal 1, order_result.carton_count
-          assert_equal Time.new(2009, 9, 1, 0, 0, 0).utc, order_result.date_shipped
+          assert_equal Time.parse('2009-09-01T04:00:00Z'), order_result.date_shipped
 
           assert_equal '40000000000', order_result.tracking_number
           assert_equal 'FIRST', order_result.service_level

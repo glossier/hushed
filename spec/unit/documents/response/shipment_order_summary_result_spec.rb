@@ -14,8 +14,8 @@ module Hushed
           assert_equal 'CLIENT', order_summary_result.client_id
           assert_equal 'BUSINESS', order_summary_result.business_unit
           assert_equal 'WAREHOUSE', order_summary_result.warehouse
-          assert_equal Time.new(1976, 3, 10, 0, 0, 0).utc, order_summary_result.from_date
-          assert_equal Time.new(1992, 12, 15, 0, 0, 0).utc, order_summary_result.to_date
+          assert_equal Time.parse('1976-03-10T05:00:00Z'), order_summary_result.from_date
+          assert_equal Time.parse('1992-12-15T05:00:00Z'), order_summary_result.to_date
 
           assert_equal :new, order_summary_result.statuses['H62003013021']
           assert_equal :shipped, order_summary_result.statuses['H62003013038']

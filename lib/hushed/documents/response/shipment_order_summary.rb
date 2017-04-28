@@ -22,11 +22,11 @@ module Hushed
         end
 
         def from_date
-          @from_date ||= Time.parse(shipment_order_summary['FromDate']).utc
+          @from_date ||= Time.parse(shipment_order_summary['FromDate'])
         end
 
         def to_date
-          @to_date ||= Time.parse(shipment_order_summary['ToDate']).utc
+          @to_date ||= Time.parse(shipment_order_summary['ToDate'])
         end
 
         def statuses

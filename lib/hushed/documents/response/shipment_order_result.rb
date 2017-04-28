@@ -19,7 +19,7 @@ module Hushed
         end
 
         def date_shipped
-          @date_shipped ||= Time.parse(so_result['DateShipped']).utc
+          @date_shipped ||= Time.parse(so_result['DateShipped'])
         end
 
         def order_number
