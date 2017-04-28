@@ -1,15 +1,37 @@
 module Hushed
-  class Variant < Struct.new(:sku, :price, :product); end
+  class InventoryUnit
+    attr_reader :variant
 
-  class Product < Struct.new(:gift_card)
+    def initialize(sku, price, gift_card)
+      product = Product.new(gift_card)
+
+      @variant = Variant.new(sku, price, product)
+    end
+  end
+
+  class Variant
+    attr_reader :sku, :price, :product
+
+    def initialize(sku, price, product)
+      @sku = sku
+      @price = price
+      @product = product
+    end
+
+    alias current_warehouse_sku sku
+  end
+
+  class Product
+    attr_reader :gift_card
+
+    def initialize(gift_card)
+      @gift_card = gift_card
+    end
+
     def gift_card?
       gift_card
     end
   end
 
-  class InventoryUnit < Struct.new(:sku, :price, :gift_card)
-    def variant
-      Variant.new(sku, price, Product.new(gift_card))
-    end
-  end
+  private_constant :Variant, :Product
 end

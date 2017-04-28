@@ -1,6 +1,6 @@
-require "forwardable"
-require "hushed/documents/request/hash_converter"
-require "hushed/black_tie_bundle"
+require 'forwardable'
+require 'hushed/documents/request/hash_converter'
+require 'hushed/black_tie_bundle'
 
 module Hushed
   module Documents
@@ -10,7 +10,7 @@ module Hushed
         include Hushed::Documents::Request::HashConverter
         extend Forwardable
 
-        NAMESPACE = "http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd"
+        NAMESPACE = 'http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd'.freeze
 
         class MissingOrderError < StandardError; end
         class MissingClientError < StandardError; end
@@ -27,15 +27,14 @@ module Hushed
 
         def to_xml
           builder = Nokogiri::XML::Builder.new do |xml|
-            xml.ShipOrderDocument('xmlns' => 'http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd') {
-
+            xml.ShipOrderDocument('xmlns' => 'http://schemas.quietlogistics.com/V2/ShipmentOrder.xsd') do
               xml.ClientID client_id
               xml.BusinessUnit business_unit
 
               xml.OrderHeader('OrderNumber' => @shipment_number,
                               'OrderType'   => order_type,
                               'OrderDate'   => @shipment.created_at.utc.iso8601,
-                              'Gift'        => has_gift_message?) {
+                              'Gift'        => gift_message?) do
 
                 xml.Extension @shipment.order.number
 
@@ -52,11 +51,11 @@ module Hushed
                 xml.ShipTo(ship_to_hash)
                 xml.BillTo(bill_to_hash)
 
-                if has_gift_message?
+                if gift_message?
                   xml.Notes('NoteType'   => 'GIFTFROM',
-                                 'NoteValue'  => gift.from)
+                            'NoteValue'  => gift.from)
                   xml.Notes('NoteType'   => 'GIFTTO',
-                                 'NoteValue'  => gift.to)
+                            'NoteValue'  => gift.to)
                 end
 
                 if @shipment.respond_to?(:value_added_services)
@@ -65,10 +64,10 @@ module Hushed
                                           'ServiceType' => service[:service_type])
                   end
                 end
-              }
+              end
 
               add_items_to_shipment_order(@shipment.inventory_units_to_fulfill, xml)
-            }
+            end
           end
           builder.to_xml
         end
@@ -79,15 +78,15 @@ module Hushed
 
           grouped_items.each_with_index do |hash, index|
             hash['Line'] = index + 1
-            xml.OrderDetails(hash) {
+            xml.OrderDetails(hash) do
               gift_card = gift_card_for(hash['ItemNumber'], items)
               add_gift_card_info(gift_card, xml) if gift_card
-            }
+            end
           end
         end
 
         def gift_card_for(sku, items)
-          item = items.find{ |item| Hushed::Sku.extract_and_normalize(item.variant) == sku }
+          item = items.find { |i| Hushed::Sku.extract_and_normalize(i.variant) == sku }
           return if item.nil? || item.line_item.nil?
           item.line_item.gift_cards.first
         end
@@ -106,8 +105,8 @@ module Hushed
         end
 
         def group_items_by_sku(item_hashes)
-          giftcards_and_others =  item_hashes.partition { |hash| !!hash['ItemIDCapture'] }
-          others = giftcards_and_others[1].group_by {|hash| hash['ItemNumber'] }.values.map do |hashes|
+          giftcards_and_others = item_hashes.partition { |hash| !hash['ItemIDCapture'].nil? }
+          others = giftcards_and_others[1].group_by { |hash| hash['ItemNumber'] }.values.map do |hashes|
             hash = hashes.first
             update_quantity(hash, hashes.length)
           end
@@ -121,7 +120,7 @@ module Hushed
         end
 
         def total_quantity(hashes)
-          hashes.map{ |hash| hash['QuantityOrdered'] }.reduce(:+)
+          hashes.map { |hash| hash['QuantityOrdered'] }.reduce(:+)
         end
 
         def order_type
@@ -164,8 +163,8 @@ module Hushed
           "#{business_unit}_#{type}_#{document_number}_#{date.strftime(DATEFORMAT)}.xml"
         end
 
-        def has_gift_message?
-          gift && gift.active?
+        def gift_message?
+          !gift.nil? && gift.active?
         end
 
         def gift

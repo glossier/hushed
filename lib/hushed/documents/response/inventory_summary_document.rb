@@ -2,7 +2,6 @@ module Hushed
   module Documents
     module Response
       class InventorySummaryDocument
-
         def initialize(options = {})
           @io = options[:io]
           @document = Nokogiri::XML::Document.parse(@io)
@@ -26,7 +25,6 @@ module Hushed
 
         def quantity_by_status(item)
           item_quantity_by_status = {}
-          available_item = get_available_status(item)
           sku = item['ItemNumber']
           item_quantity_by_status[sku] = get_available_status(item)['Quantity']
           item_quantity_by_status
@@ -41,11 +39,10 @@ module Hushed
         end
 
         def get_available_status(item)
-          for item_status in item.css('ItemStatus')
-            return item_status if item_status['Status'] == "Avail"
+          item.css('ItemStatus').each do |item_status|
+            return item_status if item_status['Status'] == 'Avail'
           end
         end
-
       end
     end
   end

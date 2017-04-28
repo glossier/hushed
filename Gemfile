@@ -4,4 +4,9 @@ source 'https://rubygems.org'
 group :test do
   gem 'pry-byebug'
 end
+
+group :development do
+  gem 'rubocop'
+end
+
 gemspec

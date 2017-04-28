@@ -23,7 +23,7 @@ module Hushed
       client.from_quiet_queue.approximate_number_of_messages
     end
 
-  private
+    private
 
     def build_message(msg)
       if received_error? msg
@@ -34,7 +34,7 @@ module Hushed
     end
 
     def received_error?(msg)
-      msg.body.include? "<ErrorMessage"
+      msg.body.include? '<ErrorMessage'
     end
   end
 end

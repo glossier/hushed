@@ -1,9 +1,9 @@
 module Hushed
   module Sku
-    extend self
+    module_function
 
     def extract_and_normalize(variant)
-      variant.sku.chomp("-SET")
+      variant.sku.chomp('-SET')
     end
   end
 end

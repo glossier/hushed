@@ -1,7 +1,6 @@
 module Hushed
   class Message
-
-    NAMESPACE = "http://schemas.quietlogistics.com/V2/EventMessage.xsd"
+    NAMESPACE = 'http://schemas.quietlogistics.com/V2/EventMessage.xsd'.freeze
 
     class MissingDocumentError < StandardError; end
     class MissingClientError < StandardError; end
@@ -30,8 +29,8 @@ module Hushed
     end
 
     def attributes
-      raise(MissingClientError.new("client cannot be missing")) unless @client
-      raise(MissingDocumentError.new("document cannot be missing")) unless @document
+      raise MissingClientError, 'client cannot be missing' unless @client
+      raise MissingDocumentError, 'document cannot be missing' unless @document
       {
         ClientId: @client.client_id, BusinessUnit: @client.business_unit,
         DocumentName: @document.filename, DocumentType: @document.type,
