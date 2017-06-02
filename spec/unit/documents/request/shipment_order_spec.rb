@@ -206,6 +206,17 @@ module Hushed
           assert_equal 'FROM: Tarzan TO: Jane', gift_card_info['Service']
         end
 
+        it 'ignores null phone number' do
+          address_without_phone = AddressDouble.example(phone: nil)
+          shipment = ShipmentDouble.example(order: OrderDouble.example(ship_address: address_without_phone))
+
+          message = ShipmentOrder.new(shipment: shipment, client: @client)
+          document = Nokogiri::XML::Document.parse(message.to_xml)
+
+          address = document.css('ShipTo').first
+          assert_nil address['Phone']
+        end
+
       private
 
         def assert_header(header)
@@ -238,6 +249,7 @@ module Hushed
           assert_equal address.state.name, node['State']
           assert_equal address.zipcode, node['PostalCode']
           assert_equal address.country.name, node['Country']
+          assert_equal address.phone, node['Phone']
         end
 
         def order_details_from(message)

@@ -178,10 +178,11 @@ class AddressDouble
     city: 'Ottawa',
     country: CountryDouble.example,
     state: StateDouble.example,
-    zipcode: 'K1N 5T5'
+    zipcode: 'K1N 5T5',
+    phone: '999-999-9999'
   }.freeze
 
-  attr_reader :company, :name, :address1, :address2, :city, :country, :state, :zipcode
+  attr_reader :company, :name, :address1, :address2, :city, :country, :state, :zipcode, :phone
 
   def initialize(options = {})
     @company = options[:company]
@@ -192,6 +193,7 @@ class AddressDouble
     @country = options[:country]
     @state = options[:state]
     @zipcode = options[:zipcode]
+    @phone = options[:phone]
   end
 
   def full_name

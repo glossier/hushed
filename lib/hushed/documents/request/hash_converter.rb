@@ -15,29 +15,26 @@ module Hushed
         end
 
         def ship_to_hash
-          {
-            'Company'    => ship_address.company,
-            'Contact'    => full_name,
-            'Address1'   => ship_address.address1,
-            'Address2'   => ship_address.address2,
-            'City'       => ship_address.city,
-            'State'      => ship_address.state.name,
-            'PostalCode' => ship_address.zipcode,
-            'Country'    => ship_address.country.name
-          }
+          address_details(ship_address)
         end
 
         def bill_to_hash
-          {
-            'Company'    => bill_address.company,
+          address_details(bill_address)
+        end
+
+        def address_details(address)
+          details = {
+            'Company'    => address.company,
             'Contact'    => full_name,
-            'Address1'   => bill_address.address1,
-            'Address2'   => bill_address.address2,
-            'City'       => bill_address.city,
-            'State'      => bill_address.state.name,
-            'PostalCode' => bill_address.zipcode,
-            'Country'    => bill_address.country.name
+            'Address1'   => address.address1,
+            'Address2'   => address.address2,
+            'City'       => address.city,
+            'State'      => address.state.name,
+            'PostalCode' => address.zipcode,
+            'Country'    => address.country.name
           }
+          details['Phone'] = address.phone if address.phone
+          details
         end
       end
     end
