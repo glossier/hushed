@@ -4,7 +4,6 @@ require 'yaml'
 require 'mocha/setup'
 require 'hushed'
 require 'pry'
-require 'bigdecimal'
 
 require 'minitest/reporters'
 
@@ -291,7 +290,8 @@ class OrderDouble
   }.freeze
 
   attr_reader :line_items, :ship_address, :bill_address, :note, :email,
-    :total_price, :currency, :email, :id, :created_at, :shipping_lines, :number, :gift
+              :total_price, :currency, :email, :id, :created_at, :shipping_lines,
+              :number, :gift
   alias shipping_address ship_address
   alias billing_address bill_address
 
@@ -322,7 +322,6 @@ class OrderDouble
     line_items.map(&:gift_cards).flatten
   end
 end
-
 
 class InventoryUnitDouble
   DEFAULT_OPTIONS = {

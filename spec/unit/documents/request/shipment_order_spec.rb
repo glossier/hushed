@@ -201,17 +201,19 @@ module Hushed
         end
 
         it 'sends the localized price' do
-          shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
-            InventoryUnitDouble.example(
-              variant: VariantDouble.example(
-                prices: {
-                  'USD' => MoneyDouble.example(cents: 1000),
-                  'CAD' => MoneyDouble.example(cents: 1500)
-                }
-              ),
-              order: OrderDouble.example(currency: 'CAD')
-            )
-          ])
+          shipment = ShipmentDouble.example(
+            inventory_units_to_fulfill: [
+              InventoryUnitDouble.example(
+                variant: VariantDouble.example(
+                  prices: {
+                    'USD' => MoneyDouble.example(cents: 1000),
+                    'CAD' => MoneyDouble.example(cents: 1500)
+                  }
+                ),
+                order: OrderDouble.example(currency: 'CAD')
+              )
+            ]
+          )
           message = ShipmentOrder.new(shipment: shipment, client: @client)
 
           order_details = order_details_from(message)
