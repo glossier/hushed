@@ -205,8 +205,8 @@ module Hushed
             InventoryUnitDouble.example(
               variant: VariantDouble.example(
                 prices: {
-                  'USD' => '10',
-                  'CAD' => '15'
+                  'USD' => MoneyDouble.example(cents: 1000),
+                  'CAD' => MoneyDouble.example(cents: 1500)
                 }
               ),
               order: OrderDouble.example(currency: 'CAD')
@@ -216,7 +216,7 @@ module Hushed
 
           order_details = order_details_from(message)
 
-          assert_equal('15', order_details.first['Price'])
+          assert_equal('15.0', order_details.first['Price'])
         end
 
       private
@@ -238,7 +238,7 @@ module Hushed
           assert_equal '1', actual['QuantityOrdered']
           assert_equal '1', actual['QuantityToShip']
           assert_equal 'EA', actual['UOM']
-          assert_equal '10', actual['Price']
+          assert_equal '10.0', actual['Price']
           assert_nil actual['ItemIDCapture']
         end
 

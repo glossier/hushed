@@ -4,6 +4,7 @@ require 'yaml'
 require 'mocha/setup'
 require 'hushed'
 require 'pry'
+require 'bigdecimal'
 
 require 'minitest/reporters'
 
@@ -28,6 +29,25 @@ module Configuration
     test_credentials_file = ENV['HOME'] + '/.hushed/credentials.yml'
     test_credentials_file = 'spec/fixtures/credentials.yml' unless File.exist?(test_credentials_file)
     YAML.safe_load(File.open(test_credentials_file, 'rb'))
+  end
+end
+
+class MoneyDouble
+  DEFAULT_OPTIONS = {
+    cents: 1000
+  }.freeze
+
+  attr_reader :cents
+  def initialize(options = {})
+    @cents = options[:cents]
+  end
+
+  def to_d
+    cents / 100.to_f
+  end
+
+  def self.example(options = {})
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
@@ -94,7 +114,7 @@ class VariantDouble
   DEFAULT_OPTIONS = {
     id: 112_233,
     sku: 'ABC-123',
-    prices: { 'USD' => 10, 'CAD' => 15 },
+    prices: { 'USD' => MoneyDouble.example(cents: 1000), 'CAD' => MoneyDouble.example(cents: 1500) },
     product: ProductDouble.example
   }.freeze
 

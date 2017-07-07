@@ -10,14 +10,14 @@ module Hushed
 
         it 'serializes the line item into a hash' do
           inventory_unit = InventoryUnitDouble.example(
-            variant: VariantDouble.example(sku: 'SKU42', prices: { 'USD' => '9.95' })
+            variant: VariantDouble.example(sku: 'SKU42', prices: { 'USD' => MoneyDouble.example(cents: 995) })
           )
 
           hash = order_details(inventory_unit)
 
           assert_equal 'SKU42', hash['ItemNumber']
           assert_equal 'EA', hash['UOM']
-          assert_equal '9.95', hash['Price']
+          assert_equal 9.95, hash['Price']
         end
       end
     end
