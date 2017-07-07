@@ -1,6 +1,5 @@
 require 'forwardable'
 require 'hushed/documents/request/hash_converter'
-require 'hushed/black_tie_bundle'
 
 module Hushed
   module Documents

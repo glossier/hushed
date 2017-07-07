@@ -116,23 +116,6 @@ module Hushed
           assert_equal '3', order_details[0]['QuantityToShip']
         end
 
-        it 'merges the black tie parts into one bundle' do
-          bundle = LineItemDouble.example(sku: 'GHOL-16-1001')
-          shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
-                                              InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'GEYE-01-WIP1-SET'), line_item: bundle),
-                                              InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'GNP0-01-WIP1-SET'), line_item: bundle),
-                                              InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'GLIP-01-WIP1-SET'), line_item: bundle),
-                                              InventoryUnitDouble.example(variant: VariantDouble.example(sku: 'GHS0-03-WIP1-SET'), line_item: bundle),
-                                              InventoryUnitDouble.example
-                                            ])
-
-          message = ShipmentOrder.new(shipment: shipment, client: @client)
-
-          order_details = order_details_from(message)
-          assert_equal 2, order_details.count
-          assert_includes order_details.map { |detail| detail[:ItemNumber] }, 'GHOL-16-1001'
-        end
-
         it 'lists the packaging instructions if shipment.value_added_service exists' do
           shipment = ShipmentDouble.example(value_added_services: [{ service: 'bagging', service_type: 'phase 1 set' }])
 
@@ -217,6 +200,25 @@ module Hushed
           assert_nil address['Phone']
         end
 
+        it 'sends the localized price' do
+          shipment = ShipmentDouble.example(inventory_units_to_fulfill: [
+            InventoryUnitDouble.example(
+              variant: VariantDouble.example(
+                prices: {
+                  'USD' => '10',
+                  'CAD' => '15'
+                }
+              ),
+              order: OrderDouble.example(currency: 'CAD')
+            )
+          ])
+          message = ShipmentOrder.new(shipment: shipment, client: @client)
+
+          order_details = order_details_from(message)
+
+          assert_equal('15', order_details.first['Price'])
+        end
+
       private
 
         def assert_header(header)
@@ -236,7 +238,7 @@ module Hushed
           assert_equal '1', actual['QuantityOrdered']
           assert_equal '1', actual['QuantityToShip']
           assert_equal 'EA', actual['UOM']
-          assert_equal expected.variant.price, actual['Price']
+          assert_equal '10', actual['Price']
           assert_nil actual['ItemIDCapture']
         end
 

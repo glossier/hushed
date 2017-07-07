@@ -8,7 +8,7 @@ module Hushed
           details = {
             'ItemNumber'      => item.variant.current_warehouse_sku,
             'UOM'             => 'EA',
-            'Price'           => item.variant.price
+            'Price'           => item.variant.localized_price(item.order.currency)
           }
           details['ItemIDCapture'] = true if item.variant.product.gift_card?
           details

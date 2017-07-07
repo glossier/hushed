@@ -94,38 +94,23 @@ class VariantDouble
   DEFAULT_OPTIONS = {
     id: 112_233,
     sku: 'ABC-123',
-    price: '6.95',
+    prices: { 'USD' => 10, 'CAD' => 15 },
     product: ProductDouble.example
   }.freeze
 
-  attr_reader :id, :sku, :price, :product
+  attr_reader :id, :sku, :product, :prices
 
   alias current_warehouse_sku sku
 
   def initialize(options = {})
     @id = options[:id]
     @sku = options[:sku]
-    @price = options[:price]
+    @prices = options[:prices]
     @product = options[:product]
   end
 
-  def self.example(options = {})
-    new(DEFAULT_OPTIONS.merge(options))
-  end
-end
-
-class InventoryUnitDouble
-  DEFAULT_OPTIONS = {
-    id: 123_456,
-    variant: VariantDouble.example,
-    line_item: LineItemDouble.example
-  }.freeze
-
-  attr_reader :id, :line_item, :variant
-  def initialize(options = {})
-    @id = options[:id]
-    @variant = options[:variant]
-    @line_item = options[:line_item]
+  def localized_price(currency)
+    prices.fetch(currency)
   end
 
   def self.example(options = {})
@@ -281,11 +266,12 @@ class OrderDouble
     id: 123_456,
     email: 'john@smith.com',
     total_price: '123.45',
+    currency: 'USD',
     gift: GiftDouble.example
   }.freeze
 
   attr_reader :line_items, :ship_address, :bill_address, :note, :email,
-              :total_price, :email, :id, :created_at, :shipping_lines, :number, :gift
+    :total_price, :currency, :email, :id, :created_at, :shipping_lines, :number, :gift
   alias shipping_address ship_address
   alias billing_address bill_address
 
@@ -299,6 +285,7 @@ class OrderDouble
     @shipping_lines = options[:shipping_lines]
     @email = options[:email]
     @total_price = options[:total_price]
+    @currency = options[:currency]
     @number = options[:number]
     @gift = options[:gift]
   end
@@ -313,6 +300,28 @@ class OrderDouble
 
   def gift_cards
     line_items.map(&:gift_cards).flatten
+  end
+end
+
+
+class InventoryUnitDouble
+  DEFAULT_OPTIONS = {
+    id: 123_456,
+    variant: VariantDouble.example,
+    order: OrderDouble.example,
+    line_item: LineItemDouble.example
+  }.freeze
+
+  attr_reader :id, :order, :line_item, :variant
+  def initialize(options = {})
+    @id = options[:id]
+    @variant = options[:variant]
+    @order = options[:order]
+    @line_item = options[:line_item]
+  end
+
+  def self.example(options = {})
+    new(DEFAULT_OPTIONS.merge(options))
   end
 end
 
