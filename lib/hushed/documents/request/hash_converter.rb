@@ -25,14 +25,14 @@ module Hushed
         def address_details(address)
           details = {
             'Company'    => address.company,
-            'Contact'    => full_name,
+            'Contact'    => address.full_name,
             'Address1'   => address.address1,
             'Address2'   => address.address2,
             'City'       => address.city,
-            'State'      => address.state.name,
             'PostalCode' => address.zipcode,
             'Country'    => address.country.name
           }
+          details['State'] = address.state.name if address.state
           details['Phone'] = address.phone if address.phone
           details
         end

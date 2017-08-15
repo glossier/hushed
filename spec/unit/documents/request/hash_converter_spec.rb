@@ -19,6 +19,14 @@ module Hushed
           assert_equal 'EA', hash['UOM']
           assert_equal 9.95, hash['Price']
         end
+
+        it 'supports nil state' do
+          address = AddressDouble.example(state: nil)
+          
+          hash = address_details(address)
+
+          assert_nil hash['State']
+        end
       end
     end
   end

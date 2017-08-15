@@ -133,10 +133,6 @@ module Hushed
           @shipment.order.bill_address
         end
 
-        def full_name
-          @shipment.order.ship_address.full_name
-        end
-
         def message
           "Succesfully Sent Shipment #{@shipment_number} to Quiet Logistics"
         end
