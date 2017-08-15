@@ -22,7 +22,7 @@ module Hushed
 
         it 'supports nil state' do
           address = AddressDouble.example(state: nil)
-          
+
           hash = address_details(address)
 
           assert_nil hash['State']
