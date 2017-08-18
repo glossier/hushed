@@ -128,7 +128,7 @@ class VariantDouble
     @product = options[:product]
   end
 
-  def localized_price(currency)
+  def declared_price(currency)
     prices.fetch(currency)
   end
 
